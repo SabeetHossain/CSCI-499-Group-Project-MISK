@@ -5,7 +5,7 @@ the group project for CSCI 499. Our group members are Ian Clarke, Kevin Wander, 
 -dont push node modules to github
 
 current instructions
--make sure you are in the directory CSCI-499-Group-Project-MISK
--cd frontend
--npm install
--npm run start to start the app and test the frontend side, currently theres nothing in backend
+-make sure you are in the directory CSCI-499-Group-Project-MISK <br />
+-cd frontend <br />
+-npm install <br />
+-npm run start to start the app and test the frontend side, currently theres nothing in backend <br />
