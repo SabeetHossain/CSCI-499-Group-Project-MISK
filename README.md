@@ -1,6 +1,8 @@
 # CSCI-499-Group-Project-MISK
 the group project for CSCI 499. Our group members are Ian Clarke, Kevin Wander, Matthew Shvorin, and Sabeet Hossain
 
+-you need to have node installed on your machine to run the web app
+
 use the command npm install in the directory of csci 499 group misk so you can start the web app after installing necessary modules.
 
 dont push node modules to github
