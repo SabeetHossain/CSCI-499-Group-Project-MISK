@@ -9,3 +9,8 @@ current instructions
 cd frontend <br />
 npm install <br />
 npm run start to start the app and test the frontend side, currently theres nothing in backend <br />
+
+how to test pages your working on until i fix the routes
+http://localhost:3000/ (testing home page)
+http://localhost:3000/register (testing sign up/register page)
+http://localhost:3000/login (testing login page)
