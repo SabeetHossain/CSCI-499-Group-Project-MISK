@@ -1,0 +1,6 @@
+
+body{
+    background: linear-gradient(0.15turn, #093C6B, #177089, #093C6B);
+    height: 100vh; //body was taking up only a small portion of the page and causing a visual bug so i had to set the height to the full
+}
+
