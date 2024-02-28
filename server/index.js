@@ -1,16 +1,13 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-//const cors = require("cors");
+const cors = require("cors");
 const pool = require("./db");
 
 
 //middleware
-//app.use(cors());
+app.use(cors());
 app.use(express.json()); //req.body
-// //route handler
-// app.get('/', (req, res) => {
-//   res.send('This is the MISK server.');
-// });
+
 
 
 //ROUTES//
@@ -25,7 +22,7 @@ app.post("/users", async(req, res) => {
         [description]
         );
 
-        res.json(newUsername.rows[0]); //might change this
+        res.json(newUsername.rows[0]); //might change this 
     } catch(err) {
         console.error(err.message);
     }
@@ -89,51 +86,10 @@ app.delete("/users/:aUser", async (req, res) => {
 })
 
 //start the server
+
+//to run, type in terminal:
+//node index.js
 //const PORT = process.env.PORT || 3001;
 app.listen(4000, () => {
   console.log("Server is running on port 4000");
 });
-
-
-/*
-const express = require('express');
-
-const app = express();
-
-//route handler
-app.get('/', (req, res) => {
-  res.send('This is the MISK server.');
-});
-
-//start the server
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-//---------------------------
-
-const express = require('express');
-const pool = require('./databasePG'); // Import database configuration
-
-const app = express();
-
-// Endpoint for testing database connection
-app.get('/test', async (req, res) => {
-  try {
-    // Query the database to test the connection
-    const result = await pool.query('SELECT $1::text as message', ['Hello, PostgreSQL!']);
-    res.send(result.rows[0].message);
-  } catch (error) {
-    console.error('Error executing query:', error);
-    res.status(500).send('Internal server error');
-  }
-});
-
-// Start the server
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
-
-*/
