@@ -14,7 +14,7 @@ dbPass = ""
 openAi = ""
 gmailPass = ""
 
-async def insert_into_db(data):
+async def insertDB(data):
     conn = await asyncpg.connect(user='postgres',
                                  password=dbPass,
                                  database='newsData',
@@ -22,7 +22,7 @@ async def insert_into_db(data):
     await conn.execute('''INSERT INTO news_summaries(summary, tickers, sentiment, level) VALUES($1, $2, $3, $4)''', data['summary'], data['tickers'], data['sentiment'], data['level'])
     await conn.close()
 
-async def fetch_subscribed_users_emails(tickers):
+async def fetchEmails(tickers):
     conn = await asyncpg.connect(user='postgres',
                                  password='matthew03',
                                  database='newsData',
@@ -37,13 +37,13 @@ async def fetch_subscribed_users_emails(tickers):
     return subscribed_emails
 
 
-async def handle_emitted_message(emitted_data):
+async def handleMessage(emitted_data):
     tickers = emitted_data['tickers']
-    await insert_into_db(emitted_data)
-    subscribed_emails = await fetch_subscribed_users_emails(tickers)
+    await insertDB(emitted_data)
+    subscribed_emails = await fetchEmails(tickers)
     print("Users subscribed to {}: {}".format(tickers, subscribed_emails))
     for email in subscribed_emails:
-        await send_email_via_gmail(
+        await sendEmail(
             email,
             "News subscription report",
             f"This is your news subscription report for {tickers} : \n"
@@ -53,7 +53,7 @@ async def handle_emitted_message(emitted_data):
             f" Strength of outlook (1-10) : {emitted_data['level']}"
         )
 
-async def send_email_via_gmail(recipient_email, subject, message_body):
+async def sendEmail(recipient_email, subject, message_body):
     sender_email = "mshvorin@gmail.com"
     app_password = gmailPass
 
@@ -73,7 +73,7 @@ async def summarize(news):
     client = AsyncOpenAI(api_key=openAi)
     content = f"{news['headline']} {news['content']} {news['symbols']}"
     try:
-        input_text = f"Given '{content}',give me a summary of what happened along with a sentiment analysis (only the words positive, negative, or neutral, just one of them) in the form of a dictionary, as well as the stock tickers affected by it, denoted by 'summary', 'sentiment', and 'tickers', respectively. Make it all in one line so one may call json.loads on it. In addition, add another value called level with the 'level' of the sentiment on it from 1 to 10. Use double quotes and not single quotes please. Return it as a dictionary, with the keys being denoted by the double quotes and not single quotes with no double quotes around the response, in the format, {{(doublequote)summary(doublequote):(doublequote)field(doublequote),...'}}"
+        input_text = f"Given '{content}', give me a summary of what happened along with a sentiment analysis (only the words positive, negative, or neutral, just one of them) in the form of a dictionary, as well as the stock tickers affected by it, denoted by 'summary', 'sentiment', and 'tickers', respectively. Make it all in one line so one may call json.loads on it. In addition, add another value called level with the 'level' of the sentiment on it from 1 to 10. Use double quotes and not single quotes please. Return it as a dictionary, with the keys being denoted by the double quotes and not single quotes with no double quotes around the response, in the format, {{(doublequote)summary(doublequote):(doublequote)field(doublequote),...'}}"
         stream = await client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": input_text}]
@@ -84,7 +84,7 @@ async def summarize(news):
         print(f"Error: {exception}")
         return "Error. Try again."
 
-async def alpaca_news_stream(emit_message):
+async def alpacaNewsStream(emit_message):
     uri = "wss://stream.data.alpaca.markets/v1beta1/news"
     async with websockets.connect(uri) as websocket:
         auth_data = {
@@ -126,9 +126,9 @@ async def alpaca_news_stream(emit_message):
                                  "level": parsed_response.get("level")}
                     print(emit_data)
                     emit_message(emit_data)
-                    await handle_emitted_message(emit_data)
+                    await handleMessage(emit_data)
                 except:
                     print(response)
 
-def start_alpaca_stream(emit_message):
-    asyncio.run(alpaca_news_stream(emit_message))
+def startAlpacaStream(emit_message):
+    asyncio.run(alpacaNewsStream(emit_message))
