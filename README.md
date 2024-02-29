@@ -29,3 +29,15 @@ CREATE TABLE users ( <br/>
       level INTEGER <br/>
     ); <br/>
      CREATE DATABASE newsData; <br/>
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+To run on localhost:3000:
+After pulling from github, go into the "server" folder and run "node index.js". This will begin running the server.
+From there, go into the "frontend" folder and type "npm install" followed by "nodemon index.js"
+This will allow you to see the web app
+
+To add your username to the database:
+Click the "Sign Up" button and input your desired username.
