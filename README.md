@@ -9,11 +9,23 @@ current instructions
 -make sure you are in the directory CSCI-499-Group-Project-MISK <br />
 cd frontend <br />
 npm install <br />
-npm run start to start the app and test the frontend side, currently theres nothing in backend <br />
 
-how to test pages 
-http://localhost:3000/ (testing home page) <br />
-http://localhost:3000/register (testing sign up/register page) <br />
-http://localhost:3000/login (testing login page) <br />
 
-you can also go to login/register pages by pressing the respective links on the home page (I'm gonna change it to be buttons) <br />
+for flask app
+Make db called newsData <br/>
+make tables called news_summary and users <br/>
+CREATE TABLE users ( <br/>
+    id SERIAL PRIMARY KEY, <br/>
+    username VARCHAR(255) UNIQUE NOT NULL, <br/>
+    password TEXT NOT NULL, <br/>
+    email VARCHAR(255) UNIQUE NOT NULL, <br/>
+    tickers TEXT[] <br/>
+    ); <br/>
+    CREATE TABLE news_summaries ( <br/>
+    id SERIAL PRIMARY KEY, <br/>
+     summary TEXT, <br/>
+     tickers TEXT[], <br/>
+     sentiment VARCHAR(10), <br/>
+      level INTEGER <br/>
+    ); <br/>
+     CREATE DATABASE newsData; <br/>
