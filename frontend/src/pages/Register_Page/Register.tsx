@@ -5,7 +5,7 @@ import "./Register.css";
 function Register() {
   const [description, setDescription] = useState("");
 
-  const onSubmitForm = async e => {
+  const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const body = { description }; // Changed from username to description
