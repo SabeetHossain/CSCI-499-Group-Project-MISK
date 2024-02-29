@@ -11,7 +11,7 @@ cd frontend <br />
 npm install <br />
 
 
-for flask app
+for flask app <br/>
 Make db called newsData <br/>
 make tables called news_summary and users <br/>
 CREATE TABLE users ( <br/>
