@@ -1,20 +1,23 @@
-const express = require("express");
+// @ts-check
+
+import express from "express";
+import cors from "cors";
+import pool from "./db";
+
+//const pool = require("./db").default;
+
 const app = express();
-const cors = require("cors");
-const pool = require("./db");
 
-
-//middleware
+// Middleware
 app.use(cors());
-app.use(express.json()); //req.body
-
+app.use(express.json());
 
 
 //ROUTES//
 
 //create a username
 
-app.post("/users", async(req, res) => {
+app.post("/users", async(req: express.Request, res: express.Response) => {
     try{
         const { description } = req.body;
         const newUsername = await pool.query(
@@ -24,38 +27,41 @@ app.post("/users", async(req, res) => {
 
         res.json(newUsername.rows[0]); //might change this 
     } catch(err) {
-        console.error(err.message);
+      console.error((err as Error).message);
+
     }
 });
 
 //get all usernames
 
-app.get("/users", async(req, res) => {
+app.get("/users", async(req: express.Request, res: express.Response) => {
     try {
         const allUsernames = await pool.query("SELECT * FROM users");
         res.json(allUsernames.rows);
     } catch (err) {
-        console.error(err.message);
+      console.error((err as Error).message);
+
     }
 });
 
 //get a username
 
-app.get("/users/:aUser", async(req, res) => {
+app.get("/users/:aUser", async(req: express.Request, res: express.Response) => {
   try {
     const { aUser } = req.params;
     const user = await pool.query("SELECT * FROM users WHERE user_id = $1", [aUser]);
 
     res.json(user.rows);
   } catch (err) {
-    console.error(err.message);
+    console.error((err as Error).message);
+
   }
 })
 
 
 //update a username
 
-app.put("/users/:aUser", async(req, res) =>{
+app.put("/users/:aUser", async(req: express.Request, res: express.Response) =>{
   try {
     const { aUser } = req.params;
     const { description } = req.body;
@@ -64,7 +70,8 @@ app.put("/users/:aUser", async(req, res) =>{
 
     res.json("Username was updated!")
   } catch (err) {
-    console.error(err.message);
+    console.error((err as Error).message);
+
   }
 })
 
@@ -72,7 +79,7 @@ app.put("/users/:aUser", async(req, res) =>{
 
 //delete a username
 
-app.delete("/users/:aUser", async (req, res) => {
+app.delete("/users/:aUser", async (req: express.Request, res: express.Response) => {
   try {
     const { aUser } = req.params;
     const deleteUsername = await pool.query("DELETE FROM users WHERE user_id = $1",[
@@ -81,7 +88,8 @@ app.delete("/users/:aUser", async (req, res) => {
 
     res.json("Username was deleted!")
   } catch (err) {
-    console.error(err.message);
+    console.error((err as Error).message);
+
   }
 })
 
