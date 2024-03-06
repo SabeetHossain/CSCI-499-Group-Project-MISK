@@ -35,7 +35,12 @@ CREATE TABLE users ( <br/>
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 To run on localhost:3000:
-After pulling from github, go into the "server" folder and run "node index.js". This will begin running the server.
+Server:
+- Install typescript globally if you have not already done so --> npm install -g typescript
+- run npm install
+- in "server" directory, run ts-node index.ts
+
+Frontend:
 From there, go into the "frontend" folder and type "npm install" followed by "nodemon index.js"
 This will allow you to see the web app
 
