@@ -34,7 +34,7 @@ CREATE TABLE users ( <br/>
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-To run on localhost:4000:
+To run on localhost:3000:
 
 Server:
 - Install typescript globally if you have not already done so --> npm install -g typescript
