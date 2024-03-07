@@ -163,4 +163,4 @@ Click the "Sign Up" button and input your desired username.
 * **Sabeet Hossain**
   * Designed initial skeleton for the react app including some basic frontend. helped with debugging when usernames weren't being added to the database correctly.
 * **Kevin Wander**
-  * implemented ticker subscription feature, helped collaborate with frontend people. Wrote the presentations. Worked on some frontend that ultimately wasn't used.
+  * Working on ticker subscription feature, helped collaborate on the frontend, and created the presentations.
