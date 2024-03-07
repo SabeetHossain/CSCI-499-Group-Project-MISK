@@ -1,24 +1,12 @@
 // @ts-check
 
-// const Pool = require("pg").Pool;
-
-// const pool = new Pool({
-//     user: "postgres",
-//     password: "turtle1357",
-//     host: "localhost",
-//     port: 5432,
-//     database: "misk_info"
-// });
-
-// module.exports = pool;
-
-
 
 import { Pool } from "pg";
 
 const pool = new Pool({
     user: "postgres",
-    password: "turtle1357",
+    //Instructor, please replace the password variable with your own postgres password
+    password: "",
     host: "localhost",
     port: 5432,
     database: "misk_info"
