@@ -159,6 +159,7 @@ Click the "Sign Up" button and input your desired username.
 * **Matthew Shvorin**
   * Worked on the Python Flask Backend (Connecting to webhook, processing data, emails, etc.)
 * **Ian Clarke**
+  * Created server folder and added "users" database in file database.sql. Added files db.ts and index.ts for creating, deleting, and editing users. Worked on Register.tsx file to ensure that server side API was being used correctly
 * **Sabeet Hossain**
   * Designed initial skeleton for the react app including some basic frontend. helped with debugging when usernames weren't being added to the database correctly.
 * **Kevin Wander**
