@@ -9,24 +9,26 @@ from aiosmtplib import SMTP
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-#Instructor, please replace this with what I will email to you
-dbPass = ""
 openAi = ""
 gmailPass = ""
+username = 'postgres'
+dbPass = "Your password here"
+db = 'newsData'
+hostname = 'localhost'
 
 async def insertDB(data):
-    conn = await asyncpg.connect(user='postgres',
+    conn = await asyncpg.connect(user=username,
                                  password=dbPass,
-                                 database='newsData',
-                                 host='localhost')
+                                 database=db,
+                                 host=hostname)
     await conn.execute('''INSERT INTO news_summaries(summary, tickers, sentiment, level) VALUES($1, $2, $3, $4)''', data['summary'], data['tickers'], data['sentiment'], data['level'])
     await conn.close()
 
 async def fetchEmails(tickers):
-    conn = await asyncpg.connect(user='postgres',
-                                 password='matthew03',
-                                 database='newsData',
-                                 host='localhost')
+    conn = await asyncpg.connect(user=username,
+                                 password=dbPass,
+                                 database=db,
+                                 host=hostname)
     users = await conn.fetch('SELECT * FROM users')
     await conn.close()
     subscribed_emails = []
