@@ -160,4 +160,5 @@ Click the "Sign Up" button and input your desired username.
   * Worked on the Python Flask Backend (Connecting to webhook, processing data, emails, etc.)
 * **Ian Clarke**
 * **Sabeet Hossain**
+  * Designed initial skeleton for the react app including some basic frontend. helped with debugging when usernames weren't being added to the database correctly.
 * **Kevin Wander**
