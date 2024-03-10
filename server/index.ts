@@ -32,6 +32,10 @@ app.post("/users", async(req: express.Request, res: express.Response) => {
     }
 });
 
+
+
+
+
 //get all usernames
 
 app.get("/users", async(req: express.Request, res: express.Response) => {
@@ -75,6 +79,22 @@ app.put("/users/:aUser", async(req: express.Request, res: express.Response) =>{
   }
 })
 
+
+//update a ticker
+
+app.put("/users/ticker/:description", async(req: express.Request, res: express.Response) =>{
+  try {
+    const { description } = req.params;
+    const { tickers } = req.body;
+    const updateUsername = await pool.query("UPDATE users SET tickers = $1 WHERE description = $2",
+    [tickers, description]);
+
+    res.json("Username was updated!")
+  } catch (err) {
+    console.error((err as Error).message);
+
+  }
+})
 
 
 //delete a username

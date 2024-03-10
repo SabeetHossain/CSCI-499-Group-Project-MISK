@@ -6,7 +6,7 @@ import { Pool } from "pg";
 const pool = new Pool({
     user: "postgres",
     //Instructor, please replace the password variable with your own postgres password
-    password: "",
+    password: "pass",
     host: "localhost",
     port: 5432,
     database: "misk_info"

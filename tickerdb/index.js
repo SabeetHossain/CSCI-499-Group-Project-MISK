@@ -9,6 +9,31 @@ app.use(express.json()); // req.body
 
 // ROUTES
 
+
+// index.ts (or app.ts)
+import express, { Application, Request, Response, NextFunction } from 'express';
+
+
+// Route handler for updating stock ticker
+app.put('/api/users/:userId/stock', async (req, res, next) => {
+  try {
+    const userId = req.params.userId;
+    const { description, ticker } = req.body; // Assuming you're sending these in the request body
+
+    // Your logic to update the stock ticker for the specified user
+    // (e.g., update the database or perform any other necessary actions)
+
+    // Respond with a success message
+    res.status(200).json({ message: 'Stock ticker updated successfully!' });
+  } catch (err) {
+    console.error('Error updating stock ticker:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+
+
 // Create a ticker
 app.post("/stocks", async (req, res) => {
   try {

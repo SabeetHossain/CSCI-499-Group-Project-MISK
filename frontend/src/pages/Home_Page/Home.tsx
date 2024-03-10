@@ -11,6 +11,7 @@ function Home() {
         <div className="home-signin-buttons">
           <Link to="/Login" className="home-signin-button"> Sign In </Link>
           <Link to="/Register" className="home-signup-button"> Sign Up </Link>
+          <Link to= "/Subscribe" className="ticker-subscribe-button"> Subscribe </Link>          
         </div>
       </div>
   );

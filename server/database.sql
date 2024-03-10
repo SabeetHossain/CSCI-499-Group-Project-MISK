@@ -2,6 +2,6 @@ CREATE DATABASE misk_info;
 
 CREATE TABLE users(
     user_id SERIAL PRIMARY KEY,
-    description VARCHAR(255)
-
+    description VARCHAR(255),
+    tickers VARCHAR(255)
 );
