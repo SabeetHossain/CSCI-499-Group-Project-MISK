@@ -12,6 +12,13 @@ CREATE DATABASE misk_info;
 -- );
 
 
+
+
+
+
+
+
+--UPDATED DATABASE--
 CREATE TABLE users(
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL, --formerly description
