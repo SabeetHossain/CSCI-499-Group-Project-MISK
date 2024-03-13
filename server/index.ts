@@ -4,35 +4,41 @@ import express from "express";
 import cors from "cors";
 import pool from "./db";
 
-//const pool = require("./db").default;
-
 const app = express();
+const bcrypt = require('bcrypt'); //for password hashing. run "npm install bcrypt"
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
 
-//ROUTES//
+//-----------------------------------------------------ROUTES FOR USER INFORMATION-----------------------------------------------------//
 
-//create a username
+
+//-----------------------------------------------------ROUTES FOR USERNAMES------------------------------------------------------------//
+
+
+
+
+//Create a new user (with username and password)
 
 app.post("/users", async(req: express.Request, res: express.Response) => {
-    try{
-        const { description } = req.body;
-        const newUsername = await pool.query(
-        "INSERT INTO users (description) VALUES($1) RETURNING *",
-        [description]
-        );
+    try {
+      const { username, password, email } = req.body;
 
-        res.json(newUsername.rows[0]); //might change this 
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      //insert new user into database
+      const newUser = await pool.query(
+          "INSERT INTO users (username, password, email) VALUES($1, $2, $3) RETURNING *",
+          [username, hashedPassword, email]
+      );
+
+        res.json(newUser.rows[0]);
     } catch(err) {
       console.error((err as Error).message);
-
     }
 });
-
-
 
 
 
@@ -68,26 +74,9 @@ app.get("/users/:aUser", async(req: express.Request, res: express.Response) => {
 app.put("/users/:aUser", async(req: express.Request, res: express.Response) =>{
   try {
     const { aUser } = req.params;
-    const { description } = req.body;
-    const updateUsername = await pool.query("UPDATE users SET description = $1 WHERE user_id = $2",
-    [description, aUser]);
-
-    res.json("Username was updated!")
-  } catch (err) {
-    console.error((err as Error).message);
-
-  }
-})
-
-
-//update a ticker
-
-app.put("/users/ticker/:description", async(req: express.Request, res: express.Response) =>{
-  try {
-    const { description } = req.params;
-    const { tickers } = req.body;
-    const updateUsername = await pool.query("UPDATE users SET tickers = $1 WHERE description = $2",
-    [tickers, description]);
+    const { username } = req.body;
+    const updateUsername = await pool.query("UPDATE users SET username = $1 WHERE user_id = $2",
+    [username, aUser]);
 
     res.json("Username was updated!")
   } catch (err) {
@@ -113,11 +102,47 @@ app.delete("/users/:aUser", async (req: express.Request, res: express.Response) 
   }
 })
 
-//start the server
 
-//to run, type in terminal:
-//node index.js
-//const PORT = process.env.PORT || 3001;
+//-----------------------------------------------------ROUTES FOR PASSWORDS------------------------------------------------------------//
+
+
+
+
+//-----------------------------------------------------ROUTES FOR TICKERS------------------------------------------------------------//
+
+//update a ticker
+
+app.put("/users/ticker/:description", async(req: express.Request, res: express.Response) =>{//maybe rename description to aTicker or something
+  try {
+    const { description } = req.params;
+    const { tickers } = req.body;
+    const updateUsername = await pool.query("UPDATE users SET tickers = $1 WHERE description = $2",
+    [tickers, description]);
+
+    res.json("Username was updated!") //ticker was updated
+  } catch (err) {
+    console.error((err as Error).message);
+
+  }
+})
+
+
+
+
+
+//START THE SERVER//
+/*
+Install TypeScript globally if you haven't already done so:
+npm install -g typescript
+
+Install dependencies:
+cd server
+npm install
+
+Run the server:
+ts-node index.ts
+*/
+
 app.listen(4000, () => {
   console.log("Server is running on port 4000");
 });
