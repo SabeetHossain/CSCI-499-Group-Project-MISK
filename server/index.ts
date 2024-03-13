@@ -86,6 +86,29 @@ app.put("/users/:aUser", async(req: express.Request, res: express.Response) =>{
 })
 
 
+
+
+//update an email
+//postman: http://localhost:4000/users/45/email
+
+app.put("/users/:userId/email", async(req: express.Request, res: express.Response) => {
+  try {
+      const { userId } = req.params;
+      const { email } = req.body;
+
+      const updateUserEmail = await pool.query(
+          "UPDATE users SET email = $1 WHERE user_id = $2",
+          [email, userId]
+      );
+
+      res.json("Email was updated!");
+  } catch (err) {
+      console.error((err as Error).message);
+  }
+});
+
+
+
 //delete a username
 
 app.delete("/users/:aUser", async (req: express.Request, res: express.Response) => {
@@ -101,9 +124,6 @@ app.delete("/users/:aUser", async (req: express.Request, res: express.Response) 
 
   }
 })
-
-
-//-----------------------------------------------------ROUTES FOR PASSWORDS------------------------------------------------------------//
 
 
 
