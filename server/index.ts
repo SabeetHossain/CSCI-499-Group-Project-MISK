@@ -132,17 +132,22 @@ app.delete("/users/:aUser", async (req: express.Request, res: express.Response) 
 
 //update a ticker
 
-app.put("/users/ticker/:description", async(req: express.Request, res: express.Response) =>{//maybe rename description to aTicker or something
+app.put("/users/ticker/:description", async(req: express.Request, res: express.Response) =>{
   try {
     const { description } = req.params;
-    const { tickers } = req.body;
-    const updateUsername = await pool.query("UPDATE users SET tickers = $1 WHERE description = $2",
-    [tickers, description]);
+    const newTicker = req.body.tickers;
 
-    res.json("Username was updated!") //ticker was updated
+    const user = await pool.query("SELECT tickers FROM users WHERE description = $1", [description]);
+    const currentTickers = user.rows[0].tickers;
+
+    const updatedTickers = currentTickers ? `${currentTickers}, ${newTicker}` : newTicker;
+
+    const updateUsername = await pool.query("UPDATE users SET tickers = $1 WHERE description = $2",
+    [updatedTickers, description]);
+
+    res.json("Username was updated!")
   } catch (err) {
     console.error((err as Error).message);
-
   }
 })
 
