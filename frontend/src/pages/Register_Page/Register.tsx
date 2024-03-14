@@ -3,12 +3,14 @@ import { Link } from "react-router-dom";
 import "./Register.css";
 
 function Register() {
-  const [description, setDescription] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const body = { description }; // Changed from username to description
+      const body = { username, password, email }; // Changed from username to description
       const response = await fetch("http://localhost:4000/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -29,11 +31,25 @@ function Register() {
         <input
           type="text"
           className="form-control"
-          value={description}
-          onChange={e => setDescription(e.target.value)}
+          value={username}
+          onChange={e => setUsername(e.target.value)}
           placeholder="Enter Username"
         />
-        <button className="btn btn-success">Register</button>
+        <input
+          type="text"
+          className="form-control"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          placeholder="Enter Password"
+        />
+        <input
+          type="text"
+          className="form-control"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="Enter Email"
+        />
+        <button type="submit" className="btn btn-success">Register</button>
       </form>
     </Fragment>
   );
