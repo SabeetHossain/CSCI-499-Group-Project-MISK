@@ -17,7 +17,7 @@ function Register() {
         body: JSON.stringify(body)
       });
 
-      window.location.assign("/");
+      window.location.assign("/login"); //redirects to login after a successful user registration
     } catch (err) {
       console.error((err as Error).message);
     }
