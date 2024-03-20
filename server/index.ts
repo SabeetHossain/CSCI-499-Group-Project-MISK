@@ -145,7 +145,7 @@ app.put("/users/ticker/:description", async(req: express.Request, res: express.R
     const updateUsername = await pool.query("UPDATE users SET tickers = $1 WHERE description = $2",
     [updatedTickers, description]);
 
-    res.json("Username was updated!")
+    res.json("Ticker was updated!")
   } catch (err) {
     console.error((err as Error).message);
   }

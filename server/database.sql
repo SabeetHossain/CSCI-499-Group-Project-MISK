@@ -1,6 +1,3 @@
-CREATE DATABASE misk_info;
-
-
 
 --ORIGINAL DATABASE--
 
