@@ -3,10 +3,15 @@
 import express from "express";
 import cors from "cors";
 import pool from "./db";
+import dotenv from 'dotenv';
+import path from 'path';
 
 const app = express();
 const bcrypt = require('bcrypt'); //for password hashing. run "npm install bcrypt"
 
+
+const envPath = path.resolve('/home/capstone/CSCI-499-Group-Project-MISK/.env');
+dotenv.config({ path: envPath });
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -47,7 +52,14 @@ app.post("/users", async(req: express.Request, res: express.Response) => {
 app.get("/users", async(req: express.Request, res: express.Response) => {
     try {
         const allUsernames = await pool.query("SELECT * FROM users");
-        res.json(allUsernames.rows);
+        // Check if any usernames were found
+        if (allUsernames.rows.length > 0) {
+          res.json(allUsernames.rows);
+        }
+        else {
+          res.status(404).json({ message: "No usernames found" });
+        }
+
     } catch (err) {
       console.error((err as Error).message);
 
