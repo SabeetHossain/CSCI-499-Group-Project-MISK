@@ -24,15 +24,15 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 import time
 
-openAi = "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" # OpenAI API Key
-gmailPass = "xeur affl zdkr yjwg" # Gmail application-specific password
-username = 'postgres'
-dbPass = "matthew03"
-db = 'newsData'
-hostname = 'localhost'
-polygon = "mplYkwRaoALynpt1vkySurApehLj8YoD"
-vantageAPI = "BXOOKFPEOHCCGAHR"
-token = "e366dfb2d40d714341d8f23d3845f45a6cafece8"
+openAi = "" # OpenAI API Key
+gmailPass = "" # Gmail application-specific password
+username = ''
+dbPass = ""
+db = ''
+hostname = ''
+polygon = ""
+vantageAPI = ""
+token = ""
 
 async def insertDB(data):
     conn = await asyncpg.connect(user=username,
