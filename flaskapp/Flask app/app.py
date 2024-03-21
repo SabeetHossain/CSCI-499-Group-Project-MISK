@@ -29,4 +29,4 @@ if __name__ == '__main__':
     thread = Thread(target=startAlpacaThread)
     thread.start()
     thread.join(timeout=1)
-    socketio.run(app, debug=True, use_reloader=False)
+    socketio.run(app, debug=True, use_reloader=False, allow_unsafe_werkzeug=True)
