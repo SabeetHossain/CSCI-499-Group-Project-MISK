@@ -21,6 +21,7 @@ CREATE TABLE users(
     username VARCHAR(255) UNIQUE NOT NULL, --formerly description
     password VARCHAR(255) NOT NULL DEFAULT '',
     email VARCHAR(255) UNIQUE,
+    phone_number VARCHAR(15),
     --role VARCHAR(50),
     tickers VARCHAR(255)
 );
