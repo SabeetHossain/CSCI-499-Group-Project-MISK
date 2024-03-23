@@ -6,11 +6,15 @@ import Login from "./pages/Login_Page/Login";
 import Subscribe from "./pages/Subscribe_Page/Subscribe"
 import Profile from "./pages/Profile_Page/Profile";
 
-
+import BasicButtons from "./materialui.js";
 
 function App() {
   return (
     <>
+      <div className="App">
+        <BasicButtons/>
+        Hello world
+      </div>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="register" element={<Register />} />
