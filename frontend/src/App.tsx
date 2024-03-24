@@ -20,7 +20,7 @@ import Footer from './components/Footer';
 
 import getLPTheme from './getLPTheme';
 
-// Import your existing components
+// OUR PREVIOUS CODE / ROUTES
 import Home from './pages/Home_Page/Home';
 import Register from './pages/Register_Page/Register';
 import Login from './pages/Login_Page/Login';
