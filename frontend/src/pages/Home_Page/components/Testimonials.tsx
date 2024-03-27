@@ -11,7 +11,7 @@ import { useTheme } from '@mui/system';
 
 const userTestimonials = [
   {
-    avatar: <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />,
+    avatar: <Avatar alt="Matt" src="/static/images/avatar/1.jpg" />,
     name: 'Remy Sharp',
     occupation: 'Senior Engineer',
     testimonial:

@@ -1,3 +1,6 @@
+//Delete this file after initial frontend setup is complete
+
+
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';

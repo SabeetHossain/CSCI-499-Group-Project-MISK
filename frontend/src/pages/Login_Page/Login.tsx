@@ -50,6 +50,7 @@ export default function SignInSide() {
           md={7}
           sx={{
             backgroundImage: 'url(https://source.unsplash.com/random?wallpapers)',
+            //backgroundImage: 'url(/home/ianclarke/Downloads/misk_logo.png)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],

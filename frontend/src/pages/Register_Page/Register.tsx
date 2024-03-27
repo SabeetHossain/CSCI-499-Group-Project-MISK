@@ -2,6 +2,7 @@ import React, { Fragment, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Register.css";
 
+
 function Register() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
