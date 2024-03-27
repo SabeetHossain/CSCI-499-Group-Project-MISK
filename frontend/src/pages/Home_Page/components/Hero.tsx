@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { alpha } from '@mui/material';
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import Link from '@mui/material/Link';
+//import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -42,7 +43,7 @@ export default function Hero() {
               fontSize: 'clamp(3.5rem, 10vw, 4rem)',
             }}
           >
-            Our latest&nbsp;
+            Begin Your&nbsp;
             <Typography
               component="span"
               variant="h1"
@@ -52,7 +53,7 @@ export default function Hero() {
                   theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
               }}
             >
-              products
+              Journey
             </Typography>
           </Typography>
           <Typography
@@ -60,8 +61,9 @@ export default function Hero() {
             color="text.secondary"
             sx={{ alignSelf: 'center', width: { sm: '100%', md: '80%' } }}
           >
-            Explore our cutting-edge dashboard, delivering high-quality solutions
-            tailored to your needs. Elevate your experience with top-tier features
+            Explore our cutting-edge dashboard, just search for any ticker of your choosing 
+            and we'll provide you will all the relevant news surrounding your input!
+            Elevate your experience with top-tier features
             and services.
           </Typography>
           <Stack
@@ -76,25 +78,31 @@ export default function Hero() {
               hiddenLabel
               size="small"
               variant="outlined"
-              aria-label="Enter your email address"
-              placeholder="Your email address"
+              aria-label="Enter a Ticker!"
+              placeholder="Your Ticker"
               inputProps={{
                 autocomplete: 'off',
                 ariaLabel: 'Enter your email address',
               }}
             />
-            <Button variant="contained" color="primary">
-              Start now
-            </Button>
-          </Stack>
-          <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
-            By clicking &quot;Start now&quot; you agree to our&nbsp;
-            <Link href="#" color="primary">
-              Terms & Conditions
-            </Link>
-            .
-          </Typography>
-        </Stack>
+
+
+      <Link to='/Subscribe' style={{ textDecoration: 'none' }}>
+          <Button variant="contained" color="primary">
+            Search for a Ticker
+          </Button>
+        </Link>
+      </Stack>
+      <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
+        By clicking &quot;Search for a Ticker&quot; you agree to our&nbsp;
+        <Link to="#" color="primary">
+          Terms & Conditions
+        </Link>
+        .
+      </Typography>
+    </Stack>
+
+
         <Box
           id="image"
           sx={(theme) => ({

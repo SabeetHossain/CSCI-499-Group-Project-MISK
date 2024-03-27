@@ -1,26 +1,3 @@
-// import React from "react";
-// //import Logo from "../../assets/Logo.png"; //requires es6 imports to use, compiles after i made changes to tsconfig adding in es6.
-// import { Link } from "react-router-dom";
-// import "./Home.css";
-
-// // function Home() {
-// //   return (
-// //       <div className="home-page">
-// //         <h1>MISK</h1>
-// //         <p> All your stocks, cryptocurrency, and related news conveniently in one place to unlock your financial potential! </p>
-// //         <div className="home-signin-buttons">
-// //           <Link to="/Login" className="home-signin-button"> Sign In </Link>
-// //           <Link to="/Register" className="home-signup-button"> Sign Up </Link>
-// //           <Link to= "/Subscribe" className="ticker-subscribe-button"> Subscribe </Link>          
-// //         </div>
-// //       </div>
-// //   );
-// // };
-
-// // export default Home;
-
-
-
 import * as React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Link } from "react-router-dom";
@@ -41,15 +18,7 @@ import Features from './components/Features';
 import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
-
 import getLPTheme from './getLPTheme';
-
-// ROUTES
-// import Home from './pages/Home_Page/Home';
-// import Register from './pages/Register_Page/Register';
-// import Login from './pages/Login_Page/Login';
-// import Subscribe from './pages/Subscribe_Page/Subscribe';
-// import Profile from './pages/Profile_Page/Profile';
 
 interface ToggleCustomThemeProps {
   showCustomTheme: Boolean;
@@ -115,29 +84,14 @@ export default function LandingPage() {
 
     
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
-
-        {/* <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="Register" element={<Register />} />
-          <Route path="Login" element={<Login />} />
-          <Route path="Profile" element={<Profile />} />
-          <Route path="Subscribe" element={<Subscribe />} />
-        </Routes> */}
-
-
-
       <CssBaseline />
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
       <Hero />
-
-      <nav className = "navbar">
-        {/* <Link to='/'>Home</Link> */}
+      {/* <nav className = "navbar">
         <Link to='/Login'>Login</Link>
         <Link to='/Register'>Register</Link>
         <Link to='/Subscribe'>Subscribe</Link>
-      </nav>
-
-
+      </nav> */}
       <Box sx={{ bgcolor: 'background.default' }}>
         <LogoCollection />
         <Features />
