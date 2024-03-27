@@ -1,21 +1,6 @@
 
---ORIGINAL DATABASE--
 
--- CREATE TABLE users(
---     user_id SERIAL PRIMARY KEY,
---     -- description VARCHAR(255),
---     username VARCHAR(255),
---     tickers VARCHAR(255)
--- );
-
-
-
-
-
-
-
-
---UPDATED DATABASE--
+--DATABASE--
 CREATE TABLE users(
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(255) UNIQUE NOT NULL, --formerly description
@@ -30,6 +15,18 @@ CREATE TABLE users(
 -- create new columns to bring a more standard login experience for the app, add routes for editing 
 -- these columns from the server side (test with postman). On the client side, make functions that allow
 -- the user to create a username and password, register with an email, and potentially edit this information
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
