@@ -1,4 +1,5 @@
-import * as React from 'react';
+//import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +13,8 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import PropTypes from 'prop-types';
+
 
 function Copyright(props: any) {
   return (
@@ -29,16 +32,53 @@ function Copyright(props: any) {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function SignInSide() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
 
+
+
+
+interface Credentials {
+  username: string;
+  password: string;
+}
+
+async function loginUser(credentials: Credentials) {
+ return fetch('http://localhost:8080/login', {
+   method: 'POST',
+   headers: {
+     'Content-Type': 'application/json'
+   },
+   body: JSON.stringify(credentials)
+ })
+   .then(data => data.json())
+}
+
+
+
+
+
+
+
+
+//Default login function
+//export default function SignInSide( { setToken }) {
+export default function SignInSide({ setToken }: { setToken: (token: string) => void }) {
+  const [username, setUserName] = useState('');
+  const [password, setPassword] = useState('');
+  
+  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+  //   const data = new FormData(event.currentTarget);
+  //   console.log({
+  //     email: data.get('email'),
+  //     password: data.get('password'),
+  //   });
+  // };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const token = await loginUser({ username, password });
+    setToken(token);
+  };
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
@@ -75,26 +115,27 @@ export default function SignInSide() {
               Sign in
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-              <TextField
+              <TextField>
                 margin="normal"
                 required
                 fullWidth
                 id="email"
                 label="Email Address"
+                <input type="text" onChange={(e) => setUserName(e.target.value)} />
                 name="email"
                 autoComplete="email"
                 autoFocus
-              />
-              <TextField
+                </TextField>
+              <TextField>
                 margin="normal"
                 required
                 fullWidth
                 name="password"
                 label="Password"
-                type="password"
+                <input type="password" onChange={(e) => setPassword(e.target.value)} />
                 id="password"
                 autoComplete="current-password"
-              />
+              </TextField>
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
@@ -126,4 +167,8 @@ export default function SignInSide() {
       </Grid>
     </ThemeProvider>
   );
+}
+
+SignInSide.propTypes = {
+  setToken: PropTypes.func.isRequired,
 }
