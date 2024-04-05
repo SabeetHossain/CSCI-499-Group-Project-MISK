@@ -8,7 +8,7 @@ import path from 'path';
 
 const app = express();
 const bcrypt = require('bcrypt'); //for password hashing. run "npm install bcrypt"
-
+const jwt = require('jsonwebtoken');
 
 const envPath = path.resolve('/home/capstone/CSCI-499-Group-Project-MISK/.env');
 dotenv.config({ path: envPath });
@@ -16,19 +16,90 @@ dotenv.config({ path: envPath });
 app.use(cors());
 app.use(express.json());
 
+//app.use(cookieParser());
+
+//------------------------------------------------ROUTES FOR LOGINS----------------------------------------------------------------//
 
 
-app.use('/login', (req, res) => {
-  res.send({
-    token: 'test123'
-  });
+
+
+
+//LOGIN ROUTE
+
+app.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    // Check if username exists
+    const user = await pool.query("SELECT * FROM users WHERE username = $1", [username]);
+    if (user.rows.length === 0) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
+
+    // Verify password
+    const hashedPassword = user.rows[0].password;
+    const isPasswordValid = await bcrypt.compare(password, hashedPassword);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid username or password" });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: user.rows[0].user_id }, process.env.JWT_SECRET, { expiresIn: 300 }); //put this into the .env file eventually
+    //res.json({ token });
+
+    // Remove the password from the user object before sending it in the response
+    const { password: userPassword, ...userInfo } = user.rows[0];
+
+    // Send response with token and user info
+    res.json({ authenticated: true, token, userInfo });
+
+  } catch (err) {
+    console.error((err as Error).message);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
-app.listen(8080, () => console.log('API is running on http://localhost:8080/login'));
-//-----------------------------------------------------ROUTES FOR USER INFORMATION-----------------------------------------------------//
 
 
-//-----------------------------------------------------ROUTES FOR USERNAMES------------------------------------------------------------//
+
+
+declare global {
+  namespace Express {
+    interface Request {
+      userID?: string; // Define userID property as optional, solves typescript error in verifyJWT function under req.userID
+    }
+  }
+}
+
+const verifyJWT = (req: express.Request, res: express.Response, next: express.NextFunction)=> {
+  const token = req.headers['x-access-token'];
+
+  if (!token) {
+    return res.status(401).json({ authenticated: false, message: "No token provided" });
+  } else {
+    jwt.verify(token, process.env.JWT_SECRET, (err: Error | null, decoded: any) => {
+      if (err) {
+        return res.status(401).json({ authenticated: false, message: "Failed to authenticate token" });
+      } else {
+        // Store decoded user ID in request object for further processing
+        req.userID = decoded.userId;
+        next();
+      }
+    });
+  }
+};
+
+
+app.get('/isUserAuth', verifyJWT, (req,res) =>{
+  res.send("Congratgulations, you are authenticated!");
+});
+
+
+
+
+
+
+//-----------------------------------------------------ROUTES FOR USERNAMES/EMAILS/PASSWORDS------------------------------------------------------------//
 
 
 
@@ -52,6 +123,8 @@ app.post("/users", async(req: express.Request, res: express.Response) => {
       console.error((err as Error).message);
     }
 });
+
+
 
 
 
@@ -152,18 +225,18 @@ app.delete("/users/:aUser", async (req: express.Request, res: express.Response) 
 
 //update a ticker
 
-app.put("/users/ticker/:description", async(req: express.Request, res: express.Response) =>{
+app.put("/users/ticker/:username", async(req: express.Request, res: express.Response) =>{
   try {
-    const { description } = req.params;
+    const { username } = req.params;
     const newTicker = req.body.tickers;
 
-    const user = await pool.query("SELECT tickers FROM users WHERE description = $1", [description]);
+    const user = await pool.query("SELECT tickers FROM users WHERE username = $1", [username]);
     const currentTickers = user.rows[0].tickers;
 
     const updatedTickers = currentTickers ? `${currentTickers}, ${newTicker}` : newTicker;
 
-    const updateUsername = await pool.query("UPDATE users SET tickers = $1 WHERE description = $2",
-    [updatedTickers, description]);
+    const updateUsername = await pool.query("UPDATE users SET tickers = $1 WHERE username = $2",
+    [updatedTickers, username]);
 
     res.json("Ticker was updated!")
   } catch (err) {
@@ -186,6 +259,8 @@ npm install
 
 Run the server:
 ts-node index.ts
+or
+nodemon index.ts
 */
 
 app.listen(4000, () => {
