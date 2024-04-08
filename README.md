@@ -1,5 +1,3 @@
-# CSI 499 Project - MISK
-
 These are the instructions to download the MISK project and run it on a local machine
 
 ## Getting Started
@@ -17,6 +15,23 @@ CREATE DATABASE newsData;
 ### Creating Tables
 
 After creating the database, you need to create tables to store user information and news summaries. Execute the following SQL commands to create these tables:
+
+#### Settings Table
+
+```postgresql
+CREATE TYPE message_type_enum AS ENUM ('EMAIL', 'SMS');
+
+CREATE TABLE
+	settings (
+		id SERIAL PRIMARY KEY,
+		message_type message_type_enum NOT NULL DEFAULT 'EMAIL'
+	);
+
+INSERT INTO
+	settings (id, message_type)
+VALUES
+	(1, 'EMAIL');
+```
 
 #### Users Table
 
@@ -68,6 +83,7 @@ dbPass = "Your password here" #Must be changed to your postgres password
 db = 'newsData'
 hostname = 'localhost'
 ```
+
 #### Required Variables
 
 In addition to configuring the database connection, there are several variables at the top of alpaca_client.py that must be replaced with actual values. These are critical for the functionality related to Alpaca API, OpenAI, and Gmail notifications.
@@ -76,6 +92,7 @@ In addition to configuring the database connection, there are several variables 
 openAi = "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" # OpenAI API Key
 gmailPass = "xeur affl zdkr yjwg" # Gmail application-specific password
 ```
+
 ## Notes
 
 - It is important to replace `"Your password here"`, the placeholder for `dbPass`, with your actual database password to ensure that the application can connect to the PostgreSQL database successfully, as well as the other respective variables
@@ -86,20 +103,17 @@ gmailPass = "xeur affl zdkr yjwg" # Gmail application-specific password
 
 Make sure you have Node.js installed before running these commands.
 
-
 ## Setting Up the Database
 
 ## Step 1: Create Database
 
-1. **Connect to PostgreSQL:** 
+1. **Connect to PostgreSQL:**
 
 sudo su postgres, psql
-
 
 2. **Create Database:**
 
 CREATE DATABASE misk_info;
-
 
 ## Step 2: Create Table
 
@@ -110,35 +124,33 @@ user_id SERIAL PRIMARY KEY,
 description VARCHAR(255)
 );
 
-
 This will create a PostgreSQL database named `misk_info` with a table named `users`, containing columns `user_id` and `description`.
-
 
 ## Server
 
-1. **Install TypeScript globally if you haven't already done so:** 
+1. **Install TypeScript globally if you haven't already done so:**
 
 npm install -g typescript
 
-2. **Install dependencies:** 
+2. **Install dependencies:**
 
 cd server
 
 npm install
 
-3. **Run the server:** 
+3. **Run the server:**
 
 ts-node index.ts
 
 ## Frontend
 
-1. **Install dependencies:** 
+1. **Install dependencies:**
 
 cd frontend
 
 npm install
 
-2. **Run the frontend server:** 
+2. **Run the frontend server:**
 
 nodemon index.js
 
@@ -146,12 +158,11 @@ This will launch the web application on localhost:3000.
 
 ## Adding Your Username to the Database
 
-1. **Access the web application:** 
-Navigate to localhost:3000 in your web browser.
+1. **Access the web application:**
+   Navigate to localhost:3000 in your web browser.
 
-2. **Sign Up:** 
-Click the "Sign Up" button and input your desired username.
-
+2. **Sign Up:**
+   Click the "Sign Up" button and input your desired username.
 
 
 #### Members

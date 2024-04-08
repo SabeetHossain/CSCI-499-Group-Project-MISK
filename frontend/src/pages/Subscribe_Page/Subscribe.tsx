@@ -50,6 +50,7 @@ function Subscribe() {
       </form>
     </Fragment>
   );
+  
 }
 
 export default Subscribe;
