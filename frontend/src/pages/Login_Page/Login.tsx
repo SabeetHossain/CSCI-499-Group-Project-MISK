@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +14,8 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useAuth } from "../../useAuth"; // Import useAuth hook
+
 
 function Copyright(props: any) {
   return (
@@ -29,16 +33,58 @@ function Copyright(props: any) {
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
-export default function SignInSide() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
 
+export default function SignInSide() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [token, setToken] = useState(''); // Declare token state and setToken setter function
+  const { setAuthentication } = useAuth(); // Get setAuthentication function from useAuth hook
+  const navigate = useNavigate(); // Use useNavigate hook to navigate programmatically
+
+
+
+  useEffect(() => {
+    // Check if token exists in local storage
+    const storedToken = localStorage.getItem('token');
+    console.log('Token retrieved from localStorage:', storedToken);
+    if (storedToken) {
+      // If token exists, set it in the state
+      setToken(storedToken);
+    }
+  }, []);
+
+
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("handleSubmit is running")
+
+    try {
+      const body = { email, password };
+      const response = await fetch('http://localhost:4000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Login Response:", data);
+        setToken(data.token);
+        localStorage.setItem('token', data.token);
+        console.log('Token stored in localStorage:', data.token);
+        //modify
+        setAuthentication(data.authenticated, data.token); //store token and use verify instead
+        navigate('/');
+      } else {
+        console.error('Failed to login:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      console.log("uhhhhhhhhhhh error")
+    }
+  };
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
@@ -84,6 +130,8 @@ export default function SignInSide() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={email}  // Make sure 'email' state is correctly bound to the input field
+                onChange={(e) => setEmail(e.target.value)}  // Ensure onChange handler updates the 'email' state
               />
               <TextField
                 margin="normal"
@@ -94,6 +142,8 @@ export default function SignInSide() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
@@ -107,6 +157,10 @@ export default function SignInSide() {
               >
                 Sign In
               </Button>
+
+              {/* Display JWT token hash value */}
+              {/* {token && <Typography variant="body1">JWT Token: {token}</Typography>} */}
+              
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
@@ -114,9 +168,9 @@ export default function SignInSide() {
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
+                <RouterLink to="/register">
+                {"Don't have an account? Sign Up"}
+                </RouterLink>
                 </Grid>
               </Grid>
               <Copyright sx={{ mt: 5 }} />

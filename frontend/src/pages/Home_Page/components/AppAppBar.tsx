@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PaletteMode } from '@mui/material';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
@@ -12,6 +12,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from './ToggleColorMode';
+import { useAuth } from "../../../useAuth"; // Import useAuth hook
+
 
 const logoStyle = {
   width: '140px',
@@ -26,6 +28,38 @@ interface AppAppBarProps {
 
 function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
   const [open, setOpen] = React.useState(false);
+
+  const navigate = useNavigate(); // Get the navigate function from useNavigate hook
+  const { isLoggedIn } = useAuth(); // Get the isLoggedIn state from useAuth hook
+
+  const handleLogout = () => {
+    
+    localStorage.removeItem("token");
+    window.location.reload();
+    // Call the logout route on the client side
+    fetch("/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log("RESPONSE WAS OKAY")
+        // Navigate to the login page or any other desired page after logout
+        navigate('/');
+        //window.location.reload();
+
+      } else {
+        // Handle logout error
+        console.error('Logout failed');
+      }
+    })
+    .catch(error => {
+      console.error('Logout error:', error);
+    });
+    //navigate('/');
+  };
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -44,6 +78,8 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
       setOpen(false);
     }
   };
+
+
 
   return (
     <div>
@@ -128,6 +164,7 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                     Pricing
                   </Typography>
                 </MenuItem>
+
                 <MenuItem
                   onClick={() => scrollToSection('faq')}
                   sx={{ py: '6px', px: '12px' }}
@@ -136,6 +173,7 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                     FAQ
                   </Typography>
                 </MenuItem>
+                
               </Box>
             </Box>
             <Box
@@ -147,16 +185,30 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
             >
 
               <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
+
+              {isLoggedIn && 
+                <Button color="primary" variant="text" size="small" onClick={handleLogout}>
+                  Logout
+                </Button>
+              }
+
+              {!isLoggedIn && 
                 <Link to="/login" style={{ textDecoration: 'none' }}>
                   <Button color="primary" variant="text" size="small">
                     Sign in
                   </Button>
                 </Link>
+              }
+
+
+              {!isLoggedIn && 
                 <Link to="/register" style={{ textDecoration: 'none' }}>
                   <Button color="primary" variant="contained" size="small">
                     Sign up
                   </Button>
                 </Link>
+              }
+
               </Box>
             <Box sx={{ display: { sm: '', md: 'none' } }}>
               <Button
@@ -201,19 +253,39 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                   </MenuItem>
                   <MenuItem onClick={() => scrollToSection('faq')}>FAQ</MenuItem>
                   <Divider />
+
+
+              <MenuItem>
+                  {isLoggedIn && 
+                <Button color="primary" variant="text" size="small" onClick={handleLogout}>
+                  Logout
+                </Button>
+              }
+              </MenuItem>
+
+
+
                   <MenuItem>
+
+
+                  {!isLoggedIn && 
                     <Link to="/register" style={{ textDecoration: 'none', width: '100%' }}>
                       <Button color="primary" variant="contained" fullWidth>
                         Sign up
                       </Button>
                     </Link>
+                    }
                   </MenuItem>
+
+                  
                   <MenuItem>
+                  {!isLoggedIn && 
                     <Link to="/login" style={{ textDecoration: 'none', width: '100%' }}>
                       <Button color="primary" variant="outlined" fullWidth >
-                        Sign in hello world
+                        Sign in
                       </Button>
                     </Link>
+                    }
                   </MenuItem>
                   
                   
