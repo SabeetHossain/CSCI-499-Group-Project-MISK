@@ -19,6 +19,7 @@ import Testimonials from './components/Testimonials';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import getLPTheme from './getLPTheme';
+import { useAuth } from "../../useAuth"; // Import useAuth hook
 
 interface ToggleCustomThemeProps {
   showCustomTheme: Boolean;
@@ -78,6 +79,8 @@ export default function LandingPage() {
   };
 
 
+  const { isLoggedIn } = useAuth(); // Get the isLoggedIn state from useAuth hook
+
   
   
   return (
@@ -86,11 +89,10 @@ export default function LandingPage() {
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
       <CssBaseline />
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
+      {/* {isLoggedIn && <h1>Welcome, User!</h1>} Display welcome message if logged in */}
       <Hero />
       {/* <nav className = "navbar">
-        <Link to='/Login'>Login</Link>
-        <Link to='/Register'>Register</Link>
-        <Link to='/Subscribe'>Subscribe</Link>
+        <Link to='/Profile'>Profile</Link>
       </nav> */}
       <Box sx={{ bgcolor: 'background.default' }}>
         <LogoCollection />
