@@ -6,21 +6,25 @@ import Login from "./pages/Login_Page/Login";
 import Subscribe from "./pages/Subscribe_Page/Subscribe";
 import Profile from "./pages/Profile_Page/Profile";
 import { useAuth } from "./useAuth"; // assuming you have a custom hook for authentication
+        
+import AdminSettingsPage from './pages/Admin_Settings_Page/AdminSettingsPage';
+import { SnackbarProvider } from 'notistack';
 
 function App() {
-  const { isLoggedIn } = useAuth(); // Assuming useAuth hook returns authentication status
+	return (
+		<SnackbarProvider maxSnack={3}>
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="register" element={<Register />} />
+				<Route path="login" element={<Login />} />
+				<Route path="profile" element={<Profile />} />
+				<Route path="subscribe" element={<Subscribe />} />
 
-  return (
-    <>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="register" element={<Register />} />
-        <Route path="login" element={<Login />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="subscribe" element={<Subscribe />} />
-      </Routes>
-    </>
-  );
+				<Route path="/admin_settings" element={<AdminSettingsPage />} />
+			</Routes>
+		</SnackbarProvider>
+	);
+
 }
 
 export default App;
