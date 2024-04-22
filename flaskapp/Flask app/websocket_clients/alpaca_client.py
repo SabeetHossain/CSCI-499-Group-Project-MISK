@@ -1,4 +1,7 @@
 import asyncio
+import math
+import random
+
 import aiohttp
 import websockets
 import json
@@ -24,8 +27,8 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 import time
 
-openAi = "" # OpenAI API Key
-gmailPass = "" # Gmail application-specific password
+openAi = ""
+gmailPass = ""
 username = ''
 dbPass = ""
 db = ''
@@ -42,20 +45,39 @@ async def insertDB(data):
     await conn.execute('''INSERT INTO news_summaries(summary, tickers, sentiment, level) VALUES($1, $2, $3, $4)''', data['summary'], data['tickers'], data['sentiment'], data['level'])
     await conn.close()
 
+async def records_to_dict_list(records):
+    dict_list = []
+    for record in records:
+        user_dict = {
+            'user_id': record['user_id'],
+            'username': record['username'],
+            'email': record['email'],
+            'tickers': record['tickers']
+        }
+        dict_list.append(user_dict)
+    return dict_list
+
 async def fetchEmails(tickers):
     conn = await asyncpg.connect(user=username,
                                  password=dbPass,
                                  database=db,
                                  host=hostname)
-    users = await conn.fetch('SELECT * FROM users')
+    usersRec = await conn.fetch('SELECT * FROM users')
+    users = await records_to_dict_list(usersRec)
+    print(users)
     await conn.close()
     subscribed_emails = []
     tickerList = []
     for user in users:
-        for ticker in tickers:
-            if ticker in user['tickers']:
-                subscribed_emails.append(user['email'])
-                tickerList.append(ticker)
+        user_tickers = user['tickers']
+        #checking if user_tickers is not None and is iterable
+        if user_tickers and tickers:
+            for ticker in tickers:
+                if ticker in user_tickers:
+                    subscribed_emails.append(user['email'])
+                    tickerList.append(ticker)
+        else:
+            print(f"No tickers set for user {user['username']} with email {user['email']}")
     return subscribed_emails, tickerList
 
 
@@ -151,48 +173,53 @@ async def alpacaNewsStream(emit_message):
             print("Arrived")
             if message_data['T'] == 'n':
                 response = await summarize(message_data)
-                try:
-                    print(json.loads(response))
-                    print(json.loads(response)['summary'])
-                    print(json.loads(response)['tickers'])
-                    print(json.loads(response)['sentiment'])
-                    print(json.loads(response)['level'])
-                    parsed_response = json.loads(response)
-                    emit_data = {"summary": parsed_response.get("summary"),
-                                 "tickers": parsed_response.get("tickers"),
-                                 "sentiment": parsed_response.get("sentiment"),
-                                 "level": parsed_response.get("level")}
-                    print(emit_data)
-                    emit_message(str(emit_data))
-                    await handleMessage(emit_data)
-                except:
-                    print(response)
+                print(json.loads(response))
+                print(json.loads(response)['summary'])
+                print(json.loads(response)['tickers'])
+                print(json.loads(response)['sentiment'])
+                print(json.loads(response)['level'])
+                parsed_response = json.loads(response)
+                emit_data = {"summary": parsed_response.get("summary"),
+                             "tickers": parsed_response.get("tickers"),
+                             "sentiment": parsed_response.get("sentiment"),
+                             "level": parsed_response.get("level")}
+                print(emit_data)
+                await handleMessage(emit_data)
+                emit_message(str(emit_data))
 
 def startAlpacaStream(emit_message):
     asyncio.run(alpacaNewsStream(emit_message))
 
 class LSTMModel(nn.Module):
-    def __init__(self, input_dim, hidden_dim, num_layers, output_dim):
+    def __init__(self, input_dim, hidden_dim, num_layers, output_dim, dropout_prob=0.5):
         super(LSTMModel, self).__init__()
         self.hidden_dim = hidden_dim
         self.num_layers = num_layers
-        self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers, batch_first=True)
+        self.lstm = nn.LSTM(input_dim, hidden_dim, num_layers, batch_first=True, dropout=dropout_prob)
         self.fc = nn.Linear(hidden_dim, output_dim)
 
     def forward(self, x):
         h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_dim).requires_grad_()
         c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_dim).requires_grad_()
-        out, (hn, cn) = self.lstm(x, (h0.detach(), c0.detach()))
+        out, _ = self.lstm(x, (h0.detach(), c0.detach()))
         out = self.fc(out[:, -1, :])
         return out
 
 
+def add_technical_indicators(df):
+    # Calculate Exponential Moving Averages (EMAs) for 10 and 50 periods
+    df['EMA_10'] = df['close'].ewm(span=10, adjust=False).mean()
+    df['EMA_50'] = df['close'].ewm(span=50, adjust=False).mean()
+    return df
+
 def prepare_sequences(data, sequence_length):
-    x, y = [], []
+    X, y = [], []
     for i in range(len(data) - sequence_length):
-        x.append(data[i:(i + sequence_length)])
-        y.append(data[i + sequence_length])
-    return np.array(x), np.array(y)
+        sequence = data[i:(i + sequence_length), :]
+        target = data[i + sequence_length, -1]  # Assuming target is 'close' price
+        X.append(sequence)
+        y.append(target)
+    return np.array(X), np.array(y)
 
 
 def generate_future_timestamps(last_timestamp, num_predictions, start_hour=9, end_hour=17):
@@ -215,7 +242,7 @@ async def tiingoML(ticker):
         headers = {
             'Content-Type': 'application/json',
         }
-        start = "2023-01-01"
+        start = "2023-05-01"
         end = "2024-03-18"
         url = f"https://api.tiingo.com/iex/{ticker}/prices?startDate={start}&endDate={end}&columns=open,high,low,close,volume&resampleFreq=1hour&token={token}"
 
@@ -234,12 +261,15 @@ async def tiingoML(ticker):
 
         close_prices = df['close'].values.reshape(-1, 1)
         scaler = MinMaxScaler(feature_range=(-1, 1))
-        close_prices_normalized = scaler.fit_transform(close_prices)
+        df = add_technical_indicators(ticker_price)
+        features = df[['close', 'EMA_10', 'EMA_50']].values
+        scaler = MinMaxScaler(feature_range=(-1, 1))
+        features_normalized = scaler.fit_transform(features)
 
-        sequence_length = 50
-        X, y = prepare_sequences(close_prices_normalized, sequence_length)
+        sequence_length = 20
+        X, y = prepare_sequences(features_normalized, sequence_length)
 
-        train_size = int(len(X) * 0.85)
+        train_size = int(len(X) * 0.9)
         X_train, y_train = X[:train_size], y[:train_size]
         X_test, y_test = X[train_size:], y[train_size:]
 
@@ -248,10 +278,10 @@ async def tiingoML(ticker):
         X_test = torch.Tensor(X_test)
         y_test = torch.Tensor(y_test)
 
-        model = LSTMModel(1, 64, 2, 1)
+        model = LSTMModel(input_dim=3, hidden_dim=64, num_layers=2, output_dim=1)
         criterion = nn.MSELoss()
         optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-        epochs = 350
+        epochs = 300
         for epoch in range(epochs):
             model.train()
             optimizer.zero_grad()
@@ -262,40 +292,85 @@ async def tiingoML(ticker):
             print(f'Epoch {epoch + 1}/{epochs} Loss: {loss.item()}')
 
         model.eval()
-        test_predict = model(X_test)
-        test_predict = scaler.inverse_transform(test_predict.detach().numpy())
-        y_test = scaler.inverse_transform(y_test.detach().numpy())
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        X_test_tensors = torch.Tensor(X_test).to(device)
+        test_predict = model(X_test_tensors)
 
-        mae = np.mean(np.abs(test_predict - y_test))
+        test_predict_np = test_predict.detach().cpu().numpy()
+
+        temp_array = np.zeros((test_predict_np.shape[0], 3))
+        temp_array[:, 0] = test_predict_np.squeeze()
+
+        # Inverse transformation
+        inverse_transformed_predictions = scaler.inverse_transform(temp_array)[:, 0]
+
+        y_test_np = y_test.detach().cpu().numpy()
+        y_test_scaled_back = scaler.inverse_transform(
+            np.concatenate((y_test_np.reshape(-1, 1), np.zeros((y_test_np.shape[0], 2))), axis=1))[:, 0]
+
+        # MAE calculation
+        mae = np.mean(np.abs(inverse_transformed_predictions - y_test_scaled_back))
         print("Mean Absolute Error:", mae)
 
+        last_known_price = df['close'].values[-1]
+        acceptance_percentage = 0.05
         future_predictions = []
-        last_sequence = X_test[-1].reshape(1, sequence_length, 1)
-        for i in range(12):
+        last_sequence = X_test[-1].reshape(1, sequence_length, -1)
+        volatility = 0.01
+        for i in range(12):  # Predicting 12 steps into the future
             with torch.no_grad():
-                future_pred = model(last_sequence)
-                future_pred = scaler.inverse_transform(future_pred.detach().numpy())
-                future_predictions.append(future_pred.flatten()[0])
-                next_value = close_prices[i + len(X_test)]
-                next_value_normalized = scaler.transform(np.array([next_value]).reshape(-1, 1))
-                new_sequence = np.append(last_sequence.numpy().flatten()[1:], next_value_normalized)
-                last_sequence = torch.Tensor(new_sequence).reshape(1, sequence_length, 1)
+                last_sequence_tensor = torch.Tensor(last_sequence).to(device)
+                future_pred = model(last_sequence_tensor)
+                future_pred_np = future_pred.cpu().detach().numpy().flatten()
+                temp_pred_array = np.zeros((1, 3))
+                temp_pred_array[:, 0] = future_pred_np
+                # Apply random walk
+                random_walk = last_known_price * (1 + np.random.normal(0, volatility))
+                future_pred_value = random_walk
+                future_predictions.append(future_pred_value)
+                last_known_price = future_pred_value  # Update last known price for next step
+                # Prepare the new sequence for the next prediction
+                new_sequence = np.roll(last_sequence.flatten(), -3)
+                new_sequence[-3:] = future_pred_value
+                last_sequence = new_sequence.reshape(1, sequence_length, -1)
 
-        actual_dates_str = [(datetime.strptime(date, "%Y-%m-%d %H:%M") - timedelta(hours=2)).strftime("%Y-%m-%d %H:%M") for date in df['date'][-12:]]
+        if abs(future_predictions[0] - last_known_price) > last_known_price * acceptance_percentage:
+            adjustment_factor = (last_known_price * acceptance_percentage) / abs(future_predictions[0] - last_known_price)
+            future_predictions = [last_known_price + (p - last_known_price) * adjustment_factor for p in future_predictions]
+
+        sentiment_score = 3  # Subtle sentiment score (e.g., 1 for slightly positive, -1 for slightly negative)
+        offset = 0
+        print(future_predictions[0] / last_known_price)
+        print( last_known_price / future_predictions[0])
+        if future_predictions[0] / last_known_price > 0.05 or last_known_price / future_predictions[0] < 0.95:
+            offset = (last_known_price - future_predictions[0]) * sentiment_score / abs(sentiment_score)
+        print(offset)
+        for i, prediction in enumerate(future_predictions):
+            sentiment_influence = (sentiment_score / 1000) * math.exp(-0.1 * i)  # Decay rate of 0.1
+            future_predictions[i] = prediction * (1 + sentiment_influence) + offset
+
+        extended_prices = np.concatenate((df['close'].values, future_predictions))
+        extended_prices_series = pd.Series(extended_prices)
+        ema_10_extended = extended_prices_series.ewm(span=10, adjust=False).mean()
+        ema_50_extended = extended_prices_series.ewm(span=50, adjust=False).mean()
+        print(f"EMA 50: {ema_50_extended}")
         future_dates_str = [date.strftime('%Y-%m-%d %H:%M') for date in generate_future_timestamps(df['date'].iloc[-1], 12, 9, 17)]
-
         print("Future dates and predictions:")
         for date, prediction in zip(future_dates_str, future_predictions):
             print(f"{date}: {prediction}")
-
         plt.figure(figsize=(10, 6))
-        plt.plot(actual_dates_str, df['close'][-12:], label='Actual Prices', marker='o', linestyle='-')
-        plt.plot(future_dates_str, future_predictions, label='Predicted Prices', marker='o', linestyle='--')
+        df['date'] = pd.to_datetime(df['date'])
+        all_dates = list(df['date'].dt.strftime('%Y-%m-%d %H:%M'))[-12:] + future_dates_str
+        plt.plot(all_dates, np.concatenate((df['close'].values[-12:], future_predictions)),
+                 label='Close Prices & Predictions', marker='o', linestyle='-')
+        # Plot EMA 10 and EMA 50
+        plt.plot(all_dates, ema_10_extended[-len(all_dates):], label='EMA 10', color='green', linestyle='-.')
+        plt.plot(all_dates, ema_50_extended[-len(all_dates):], label='EMA 50', color='orange', linestyle='-.')
 
         plt.xlabel('Date and Time')
         plt.ylabel('Price')
-        plt.title(f'Stock Price Prediction for {ticker}')
-        plt.xticks(rotation=45)
+        plt.title(f'Stock Price and EMA Prediction for {ticker}')
+        plt.xticks(rotation=45, ha="right")
         plt.legend()
         plt.tight_layout()
         plotname = f"../images/MLgraph{ticker}.png"
@@ -312,4 +387,6 @@ async def tiingoML(ticker):
 # getLastDayPricesAV()
 # getLastDayPricesPolygon()
 # tiingoML("TSLA")
+# asyncio.run(tiingoML("AAPL"))
+# asyncio.run(tiingoML("MSFT"))
 # asyncio.run(tiingoML("TSLA"))
