@@ -1,0 +1,80 @@
+.input:focus{
+    outline: none !important;
+}
+.input{
+    border: none;
+    width: 100%;
+    height: 6vh;
+    margin-top: 14px;
+    border-radius: 4px;
+    background: transparent;
+    padding-left: 4px;
+    
+}
+.input:focus{
+background-color: #cbe5f0;
+border-radius: 30px;
+
+}
+.result{
+    height: 100%;
+}
+.gcse-search
+{
+    background-color: aqua !important;
+}
+.gsc-control-cse{
+    background-color: rgb(178, 218, 235) !important;
+    border: none !important;
+    border-radius: 20px !important;
+    height:3rem !important;
+    text-align: center !important;
+    align-items: center !important;
+}
+.gsc-input{
+    background: transparent !important;
+    
+}
+.gsc-control-cse gsc-control-cse-en{
+background: transparent !important;
+}
+.gsc-input-box{
+    background: transparent !important;
+    border: none !important;
+}
+.gsc-search-button{
+    background: transparent !important;
+    border-radius: 50% !important;
+    border:  none !important;
+    font-size: 24px !important;
+   
+    /* background-color: #cbe5f0 !important; */
+}
+.gsc-search-button svg{
+    display: none;
+    width: 22px;
+    height: 20px;
+    margin-bottom: 18px !important;
+    margin-left: 0px !important;
+}
+.gsc-search-button svg:focus{
+    outline: none !important;
+}
+.gsc-results-wrapper-overlay{
+
+    height: 1000% !important;
+}
+.gsc-search-box gsc-search-box-tools{
+    margin-bottom: 4px !important;
+}
+.gsc-control-wrapper-cse{
+    margin-top: 2px !important;
+    bottom: 20px !important;
+}
+.gstl_50 gsc-input tbody{
+    margin-top: 0px !important;
+}
+.gsc-input{
+    margin-top: 0px !important;
+    bottom: 10px !important;
+}
