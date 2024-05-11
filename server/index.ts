@@ -209,23 +209,23 @@ app.get(
 
 //update a username
 
-app.put(
-	'/users/:aUser',
-	async (req: express.Request, res: express.Response) => {
-		try {
-			const { aUser } = req.params;
-			const { username } = req.body;
-			const updateUsername = await pool.query(
-				'UPDATE users SET username = $1 WHERE user_id = $2',
-				[username, aUser],
-			);
+// app.put(
+// 	'/users/:aUser',
+// 	async (req: express.Request, res: express.Response) => {
+// 		try {
+// 			const { aUser } = req.params;
+// 			const { username } = req.body;
+// 			const updateUsername = await pool.query(
+// 				'UPDATE users SET username = $1 WHERE user_id = $2',
+// 				[username, aUser],
+// 			);
 
-			res.json('Username was updated!');
-		} catch (err) {
-			console.error((err as Error).message);
-		}
-	},
-);
+// 			res.json('Username was updated!');
+// 		} catch (err) {
+// 			console.error((err as Error).message);
+// 		}
+// 	},
+// );
 
 //update an email
 //postman: http://localhost:4000/users/45/email
@@ -267,6 +267,216 @@ app.delete(
 		}
 	},
 );
+
+//updating a users profile
+/*
+  Todo(Done):
+	1. rework logic
+	    -have a boolean that tracks whether a user based error was made
+		-first do the user error checks if username != "" ...(insert logic)
+		-after passing all the error checks if user based error == false, proceed to update any fields that != ""
+	2. fix incorrect password checking logic (skipped)
+	    -the idea was to make passwords unique, not allowing a user to use the same password as another,
+		but that doesnt really makes sense and also it seems like it will take a lot of time for me 
+		to implement and we dont have much time
+	3. send a status message (string) and a status value (string)
+	    -status value: success, failure, etc
+		-status messages: (I will also need booleans tracking which items were updated)
+		   -if multiple things were updated profile successfully updated.
+           -if one thing was updated, say that specific thing was updated
+	       -if a user error occured will say what the user did wrong
+	       -if a user successfully updates one thing but has user error on another, 
+		    will say what was updated successfully and what the user error was.
+		Design Decision: If the user has multiple errors, only whichever one was caught first will 
+		                 be sent to the user because as soon as a user based error is found 
+						 a res.status is returned.
+*/
+
+/*new Todo: having checks for valid email strings and password strings */
+app.put('/users/:userId', async (req: express.Request, res: express.Response) =>{
+	try{
+		let usernameupdated:boolean = false;
+		let passwordupdated:boolean = false;
+		let emailupdated:boolean = false;
+		let errorOccurred:boolean = false;
+		// let usernameupdated:boolean = false;
+		let statusValue:string = 'placeholder'
+		let statusMessage:string = 'placeholder'
+		let credentialsUpdated:boolean = false;
+		let numUpdates:number = 0;
+		// const allHashedPasswords = await pool.query('SELECT password FROM users');
+		// console.log('all hashed passwords');
+		// console.log(allHashedPasswords);
+		console.log('this is req.params: ' + req.params);
+		console.log('this is req.body: '+ req.body);
+
+		const { userId } = req.params;
+		const user = await pool.query(
+			'SELECT * FROM users WHERE user_id = $1',
+			[userId],
+		);
+		const {username, currentPassword, newPassword, email} = req.body;
+		console.log('username: ' + username);
+		console.log('current password: '+ currentPassword);
+		console.log('new password: '+newPassword);
+		console.log('email: '+email);
+		// console.log('users username: '+ user.rows[0].username);
+		//error checks:
+		if(username != "")
+		{
+			//if the user submits the same username they currently have
+			if(username === user.rows[0].username)
+			{
+				console.log('same username submitted');
+				errorOccurred = true;
+				statusMessage = 'new username cannot match current username!';
+				statusValue = 'error';
+				return res.status(400).json({message: statusMessage, value: statusValue});	
+			}		
+
+			/* usernames should be unique. if the submitted username matches another one 
+			   in the database, returns error.*/
+			const existingUsername = await pool.query(
+				'SELECT * FROM users WHERE user_id != $1 AND username = $2',
+				[userId, username]
+			);
+
+			if (existingUsername.rows.length > 0) {
+				errorOccurred = true;
+				statusMessage = 'username belongs to another account!';
+				statusValue = 'error';
+				return res.status(400).json({message: statusMessage, value: statusValue});	
+			}
+		}
+		if(newPassword != "")
+		{
+			const hashedPassword = user.rows[0].password;
+			const isPasswordValid = await bcrypt.compare(currentPassword, hashedPassword);
+			//checks if current password submitted matches the one in database
+			if (!isPasswordValid) {
+				console.log("current password does not match password in database");
+				errorOccurred = true;
+				statusMessage = 'current password is incorrect!';
+				statusValue = 'error';
+				return res.status(400).json({message: statusMessage, value: statusValue});	
+			}
+
+			//if the submitted current password does match, checks if the submitted new password is the same as the current password.
+			else if(currentPassword === newPassword)
+			{
+				console.log('matching current and new passwords');
+				errorOccurred = true;
+				statusMessage = 'new password cannot match current password!';
+				statusValue = 'error';
+				return res.status(400).json({message: statusMessage, value: statusValue});	
+			}
+		}
+		if(email != "")
+		{
+			//if submitted email matches the one in database than nothing changes, that is a user side error.
+			if(email === user.rows[0].email)
+			{
+				console.log('same email submitted');
+				errorOccurred = true;
+				statusMessage = 'new email cannot match current email';
+				statusValue = 'error';
+				return res.status(400).json({message: statusMessage, value: statusValue});
+			}
+			
+			// checks if submitted email is unique. if it matches another users email, returns error.
+			const existingEmail = await pool.query(
+				'SELECT * FROM users WHERE user_id != $1 AND email = $2',
+				[userId, email]
+			);
+			if (existingEmail.rows.length > 0) {
+				console.log("email exists in database");
+				errorOccurred=true;
+				statusMessage = 'email belongs to another account';
+				statusValue = 'error';
+				return res.status(400).json({message: statusMessage, value: statusValue});
+			}
+		}
+		//now that all the error checks are done the updating will begin.
+		if(errorOccurred == false)
+		{
+			if(username != "")
+			{
+				const updateUsername = await pool.query(
+					'UPDATE users SET username = $1 WHERE user_id = $2',
+					[username, userId],
+				);
+				credentialsUpdated = true; 
+				usernameupdated = true;
+				numUpdates +=1;
+				statusMessage= 'username was successfully updated!';
+				statusValue = 'success';
+				console.log('Username was updated!'+ numUpdates);
+			}
+
+			if(newPassword != "")
+			{
+				const newHashedPassword = await bcrypt.hash(newPassword, 10);
+				const updatePassword = await pool.query(
+					'UPDATE users SET password = $1 WHERE user_id = $2',
+					[newHashedPassword, userId],
+				);
+				credentialsUpdated = true; 
+				numUpdates +=1;
+				statusMessage= 'password was successfully updated!';
+				statusValue = 'success';
+				console.log('Password was updated!');
+			}
+			
+			if(email != "")
+			{
+				const updateEmail = await pool.query(
+					'UPDATE users SET email = $1 WHERE user_id = $2',
+					[email, userId],
+				);
+				credentialsUpdated = true; 
+				numUpdates +=1;
+				statusMessage= 'email was successfully updated!';
+				statusValue = 'success';
+				console.log('Email was updated!');
+			}
+		}
+
+		//if more than one item was updated, and all were succesfully updated leave a general success message
+		if(numUpdates > 1)
+		{
+			statusMessage= 'profile was successfully updated!';
+			statusValue = 'success';
+		}
+
+		if(credentialsUpdated == true)
+		{
+			statusValue='success';
+			// const { password: userPassword, ...userInfo } = user.rows[0];
+			const token = jwt.sign({ userId: user.rows[0].user_id }, jwtSecret, { expiresIn: 600 });
+			console.log('profile successfully updated and token sent')
+			//visual studio is showing status is some keyword so im avoiding name something status:
+			res.json({message: statusMessage, value: statusValue, authenticated: true, token });
+		}
+		else
+		{
+			if(numUpdates == 0)
+			{
+				statusMessage = 'profile is not updated because all fields were blank'
+				statusValue = 'warning';
+				return res.status(400).json({message: statusMessage, value: statusValue});
+			}
+			else
+			{
+				//this else is for any other edge case in which the profile fails to update
+				statusMessage = 'something went wrong. please try again';
+				statusValue =  'warning';
+				return res.status(400).json({message: statusMessage, value: statusValue});
+			}
+		}
+	} catch (err) {
+		console.error((err as Error).message);
+	}
+});
 
 //-----------------------------------------------------ROUTES FOR TICKERS------------------------------------------------------------//
 

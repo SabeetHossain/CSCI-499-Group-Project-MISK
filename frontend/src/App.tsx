@@ -9,6 +9,7 @@ import { useAuth } from "./useAuth"; // assuming you have a custom hook for auth
         
 import AdminSettingsPage from './pages/Admin_Settings_Page/AdminSettingsPage';
 import { SnackbarProvider } from 'notistack';
+import News from "./pages/News_Page/News";
 
 function App() {
 	return (
@@ -19,7 +20,7 @@ function App() {
 				<Route path="login" element={<Login />} />
 				<Route path="profile" element={<Profile />} />
 				<Route path="subscribe" element={<Subscribe />} />
-
+				<Route path="news" element={<News/>} />
 				<Route path="/admin_settings" element={<AdminSettingsPage />} />
 			</Routes>
 		</SnackbarProvider>
