@@ -1,3 +1,5 @@
+//test files, not actually used in project
+
 const Pool = require("pg").Pool;
 
 const pool = new Pool({

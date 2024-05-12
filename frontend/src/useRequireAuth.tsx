@@ -10,7 +10,7 @@ export const useRequireAuth = () => {
     if (!isLoggedIn) {
       // Redirect to the login page if the user is not logged in
       navigate('/login');
-      console.log("YOU ARE NOT LOGGED IN NOOOOO")
+      console.log("NOT LOGGED IN!")
     }
     else {
       // You can use the token here if needed

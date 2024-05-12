@@ -1,3 +1,7 @@
+/*This page imports templates from material UI's signup template:
+https://github.com/mui/material-ui/tree/v5.15.14/docs/data/material/getting-started/templates/sign-up
+ */
+
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -31,7 +35,7 @@ function SignUp() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body)
       }).then(() => {
-        // Redirect to login page after successful registration
+        //redirect to login page after successful registration
         window.location.assign("/login");
       }).catch(error => {
         console.error("Error:", error);

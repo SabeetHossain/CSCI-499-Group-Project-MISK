@@ -1,3 +1,8 @@
+/*This page imports templates from material UI's landing page template:
+https://github.com/mui/material-ui/tree/v5.15.14/docs/data/material/getting-started/templates/landing-page
+the source code for the components used in this file can be found in src/pages/Home_Page/components/
+*/
+
 import * as React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Link } from "react-router-dom";
@@ -89,11 +94,7 @@ export default function LandingPage() {
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
       <CssBaseline />
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
-      {/* {isLoggedIn && <h1>Welcome, User!</h1>} Display welcome message if logged in */}
       <Hero />
-      {/* <nav className = "navbar">
-        <Link to='/Profile'>Profile</Link>
-      </nav> */}
       <Box sx={{ bgcolor: 'background.default' }}>
         <LogoCollection />
         <Features />

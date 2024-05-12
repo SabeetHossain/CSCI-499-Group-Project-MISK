@@ -10,7 +10,7 @@ function Subscribe() {
   const { verifyToken } = useAuth(); // Get the isLoggedIn state from useAuth hook
   const navigate = useNavigate(); // Get the navigate function from useNavigate hook
 
-
+//hook for verifying if user is logged in
   useEffect(  () => {
     const loggedInCheck = async () => {
       console.log("INSIDE OF SUBCRIBE: grabbing token")

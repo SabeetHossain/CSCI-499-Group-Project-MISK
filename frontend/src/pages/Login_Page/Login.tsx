@@ -1,3 +1,7 @@
+/*This page imports templates from material UI's sign in template:
+https://github.com/mui/material-ui/tree/v5.15.14/docs/data/material/getting-started/templates/sign-in
+*/
+
 import * as React from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -37,18 +41,18 @@ const defaultTheme = createTheme();
 export default function SignInSide() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [token, setToken] = useState(''); // Declare token state and setToken setter function
-  const { setAuthentication } = useAuth(); // Get setAuthentication function from useAuth hook
-  const navigate = useNavigate(); // Use useNavigate hook to navigate programmatically
+  const [token, setToken] = useState(''); //Declare token state and setToken setter function
+  const { setAuthentication } = useAuth(); //get setAuthentication function from useAuth hook
+  const navigate = useNavigate(); //use useNavigate hook to navigate programmatically
 
 
 
   useEffect(() => {
-    // Check if token exists in local storage
+    //check if token exists in local storage
     const storedToken = localStorage.getItem('token');
     console.log('Token retrieved from localStorage:', storedToken);
     if (storedToken) {
-      // If token exists, set it in the state
+      // If the token exists, set it in the state
       setToken(storedToken);
     }
   }, []);
@@ -74,7 +78,6 @@ export default function SignInSide() {
         setToken(data.token);
         localStorage.setItem('token', data.token);
         console.log('Token stored in localStorage:', data.token);
-        //modify
         setAuthentication(data.authenticated, data.token); //store token and use verify instead
         navigate('/');
       } else {
@@ -82,7 +85,6 @@ export default function SignInSide() {
       }
     } catch (error) {
       console.error('Error:', error);
-      console.log("uhhhhhhhhhhh error")
     }
   };
   return (
@@ -131,7 +133,7 @@ export default function SignInSide() {
                 autoComplete="email"
                 autoFocus
                 value={email}  // Make sure 'email' state is correctly bound to the input field
-                onChange={(e) => setEmail(e.target.value)}  // Ensure onChange handler updates the 'email' state
+                onChange={(e) => setEmail(e.target.value)}  //ensure onChange handler updates the 'email' state
               />
               <TextField
                 margin="normal"

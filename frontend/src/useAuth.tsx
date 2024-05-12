@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
 
 export const useAuth = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Initially, the user is not logged in
-  const [token, setToken] = useState<string | null>(null); // Initialize token state
+  const [isLoggedIn, setIsLoggedIn] = useState(false); //not logged in initially
+  const [token, setToken] = useState<string | null>(null); //initialize token state
 
   useEffect(() => {
-    // Load token from localStorage on component mount
+    //load token from localStorage on component mount
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
-      // Perform the initial authentication check only when the component mounts
+      //perform the initial authentication check only when the component mounts
       console.log("Stored token found", storedToken, "calling verifyToken")
       verifyToken(storedToken);
     }
-  }, []); // Empty dependency array ensures this effect runs only once on component mount
+  }, []); //this empty dependency array ensures this effect runs only once on component mount
 
 
   const verifyToken = async (storedToken: string) => {
@@ -45,12 +45,6 @@ export const useAuth = () => {
       
       return json
 
-      // Log storedToken to check its value
-      // console.log("Finished running everything!!!")
-      // console.log("Stored token:", storedToken, "type of storedToken: ", typeof(storedToken));
-      // Pass the stored token to setAuthentication
-      //setAuthentication(json.authenticated, storedToken);
-
     } catch (error) {
       console.error("Error verifying token:", error);
     }
@@ -70,7 +64,6 @@ export const useAuth = () => {
   
 
   return { isLoggedIn, setAuthentication, token, verifyToken };
-  //where isLoggedin is a bool, setAuthentication is 
 };
 
 
