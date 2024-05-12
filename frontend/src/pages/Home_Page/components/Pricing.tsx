@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
@@ -17,7 +18,7 @@ const tiers = [
     title: 'Free',
     price: '0',
     description: [
-      '10 users included',
+      '50 users included',
       '2 GB of storage',
       'Help center access',
       'Email support',
@@ -30,26 +31,28 @@ const tiers = [
     subheader: 'Recommended',
     price: '15',
     description: [
-      '20 users included',
+      'Coming Soon!',
+      '100 users included',
       '10 GB of storage',
       'Help center access',
       'Priority email support',
       'Dedicated team',
       'Best deals',
     ],
-    buttonText: 'Start now',
+    buttonText: 'Coming Soon!',
     buttonVariant: 'contained',
   },
   {
     title: 'Enterprise',
     price: '30',
     description: [
-      '50 users included',
+      'Coming Soon!',
+      '500 users included',
       '30 GB of storage',
       'Help center access',
       'Phone & email support',
     ],
-    buttonText: 'Contact us',
+    buttonText: 'Coming Soon!',
     buttonVariant: 'outlined',
   },
 ];
@@ -193,17 +196,18 @@ export default function Pricing() {
                   </Box>
                 ))}
               </CardContent>
+              {tier.title !== 'Professional' && tier.title !== 'Enterprise' && (
               <CardActions>
-                <Button
-                  fullWidth
-                  variant={tier.buttonVariant as 'outlined' | 'contained'}
-                  component="a"
-                  href="/material-ui/getting-started/templates/checkout/"
-                  target="_blank"
-                >
-                  {tier.buttonText}
-                </Button>
+              <Button
+                fullWidth
+                variant={tier.buttonVariant as 'outlined' | 'contained'}
+                component={Link}
+                to="/register"
+              >
+                {tier.buttonText}
+              </Button>
               </CardActions>
+              )}
             </Card>
           </Grid>
         ))}

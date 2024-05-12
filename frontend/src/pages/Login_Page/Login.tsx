@@ -165,16 +165,28 @@ export default function SignInSide() {
               
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  {/* <Link href="#" variant="body2">
                     Forgot password?
-                  </Link>
+                  </Link> */}
                 </Grid>
+
+
+
+
                 <Grid item>
                 <RouterLink to="/register">
                 {"Don't have an account? Sign Up"}
                 </RouterLink>
                 </Grid>
               </Grid>
+
+              <Grid item>
+                <RouterLink to="/">
+                {"<-Go Back to Homepage"}
+                </RouterLink>
+                </Grid>
+
+
               <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>
