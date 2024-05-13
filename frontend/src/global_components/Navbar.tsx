@@ -16,7 +16,7 @@ import { useAuth } from '../useAuth';
 
 
 const logoStyle = {
-  width: '140px',
+  width: '80px',
   height: 'auto',
   cursor: 'pointer',
 };
@@ -130,9 +130,9 @@ function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
               }}
             >
               <img
-                onClick={() => linkTo('')}
-                src={ 
-                  'https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg'
+              onClick={() => linkTo('')}
+                src={
+                "https://i.imgur.com/RgMvco0.png"
                 }
                 style={logoStyle}
                 alt="logo of MISK"

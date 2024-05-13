@@ -16,8 +16,8 @@ import { useAuth } from "../../../useAuth"; // Import useAuth hook
 
 
 const logoStyle = {
-  width: '80px', // Set the width to make the image smaller
-  height: 'auto', // Maintain aspect ratio by setting height to 'auto'
+  width: '80px',
+  height: 'auto',
 };
 
 
@@ -126,9 +126,6 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
             >
               <img
                 src={
-                  //'https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg'
-                //"https://i.imgur.com/DD0zLbT.png"
-                //"https://i.imgur.com/7ZSu12A.png"
                 "https://i.imgur.com/RgMvco0.png"
                 }
                 style={logoStyle}
