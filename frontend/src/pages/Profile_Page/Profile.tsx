@@ -197,6 +197,33 @@ const Profile = () => {
     checkLoggedIn();
   })
 
+  async function handleDelete():Promise<void> {
+    const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+      const decodedToken= jwtDecode(token as string) as JwtPayload;
+      const userId = parseInt(decodedToken.userId);
+      try{
+        const response = await fetch(`http://localhost:4000/users/${userId}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (response.ok) {
+          showToast('success', 'Account successfully deleted');
+          localStorage.removeItem("token");
+        }
+        else{
+          console.error('Error deleting user:');
+          showToast('error', 'Account could not be deleted');
+        }
+      }catch(error) {
+        console.error('Error fetching user info:', error);
+      }
+    
+
+
+  }
+
   const handleSubmitChanges = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
@@ -244,6 +271,8 @@ const Profile = () => {
       console.error((err as Error).message);
     }
   };
+
+
   
   return (
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
@@ -358,7 +387,7 @@ const Profile = () => {
       <Typography color="text.primary" variant='h4' sx={{alignItems: 'center'}}>Delete Account</Typography>
       <Typography   color="text.secondary"sx={{  mb: 1 }}>If you delete your account, all information will be lost and the changes CANNOT be undone</Typography>
       <Button
-            onClick={clearFields}
+            onClick={handleDelete}
             variant="contained"
             sx={{ml:3, mt: 3, mb: 2, backgroundColor:'#ff0000 !important'}}
           >
