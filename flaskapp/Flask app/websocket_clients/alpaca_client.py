@@ -1,7 +1,9 @@
 import asyncio
+import http.client
 import math
 import random
-
+import boto3
+from botocore.exceptions import NoCredentialsError
 import aiohttp
 import websockets
 import json
@@ -26,6 +28,8 @@ import numpy as np
 import os
 from concurrent.futures import ThreadPoolExecutor
 import time
+import twilio
+import twilio.rest
 
 openAi = ""
 gmailPass = ""
@@ -36,13 +40,16 @@ hostname = ''
 polygon = ""
 vantageAPI = ""
 token = ""
+twilio_account_sid = ""
+twilio_auth_token = "" #Trial phone: +18447801837
+twilio_sender_phone = ""
 
 async def insertDB(data):
     conn = await asyncpg.connect(user=username,
                                  password=dbPass,
                                  database=db,
                                  host=hostname)
-    await conn.execute('''INSERT INTO news_summaries(summary, tickers, sentiment, level) VALUES($1, $2, $3, $4)''', data['summary'], data['tickers'], data['sentiment'], data['level'])
+    await conn.execute('''INSERT INTO news_summaries(summary, tickers, sentiment, level) VALUES($1, $2, $3, $4)''', data['summary'], data['tickers'], data['sentiment'], int(data['level']))
     await conn.close()
 
 async def records_to_dict_list(records):
@@ -52,12 +59,28 @@ async def records_to_dict_list(records):
             'user_id': record['user_id'],
             'username': record['username'],
             'email': record['email'],
+            'tickers': record['tickers'],
+            'phonesubbed': record['phonesubbed'],
+            'emailsubbed': record['emailsubbed'],
+            'phone_number': record['phone_number']
+        }
+        dict_list.append(user_dict)
+    return dict_list
+
+async def historical_records_to_dict(records):
+    dict_list = []
+    for record in records:
+        user_dict = {
+            'id': record['id'],
+            'level': record['level'],
+            'sentiment': record['sentiment'],
+            'summary': record['summary'],
             'tickers': record['tickers']
         }
         dict_list.append(user_dict)
     return dict_list
 
-async def fetchEmails(tickers):
+async def fetchMessanging(tickers):
     conn = await asyncpg.connect(user=username,
                                  password=dbPass,
                                  database=db,
@@ -67,45 +90,149 @@ async def fetchEmails(tickers):
     print(users)
     await conn.close()
     subscribed_emails = []
+    subscribed_numbers = []
     tickerList = []
     for user in users:
+        print(user)
         user_tickers = user['tickers']
-        #checking if user_tickers is not None and is iterable
+        # Check if user_tickers is not None and is iterable
         if user_tickers and tickers:
             for ticker in tickers:
                 if ticker in user_tickers:
-                    subscribed_emails.append(user['email'])
+                    subscribed_emails.append({user['email'] : user['emailsubbed']})
+                    subscribed_numbers.append({user['phone_number'] : user['phonesubbed']})
                     tickerList.append(ticker)
         else:
-            print(f"No tickers set for user {user['username']} with email {user['email']}")
-    return subscribed_emails, tickerList
+            print(f"No tickers set for user {user['username']} with email {user['email']} and number {user['phone_number']}")
+    return subscribed_emails, subscribed_numbers, tickerList
+
+async def getHistoricalDBData():
+    conn = await asyncpg.connect(user=username,
+                                 password=dbPass,
+                                 database=db,
+                                 host=hostname)
+    usersData = await conn.fetch('SELECT * FROM news_summaries')
+    Data = await historical_records_to_dict(usersData)
+    print(Data)
+    return Data
 
 
 async def handleMessage(emitted_data):
     tickers = emitted_data['tickers']
     await insertDB(emitted_data)
-    subscribed_emails, tickerList = await fetchEmails(tickers)
-    subscribed_emails = list(set(subscribed_emails))
-    tickerList = list(set(tickerList))
+    subscribed_emails, subscribed_numbers, ticker_list = await fetchMessanging(tickers)
+    print("Emails")
+    print(subscribed_emails)
+    # subscribed_emails = list(set(subscribed_emails))
+    # subscribed_numbers = list(set(subscribed_numbers))
+    tickerList = list(set(ticker_list))
     print("Users subscribed to {}: {}".format(tickers, subscribed_emails))
     with ThreadPoolExecutor() as executor:
-        plotnames = await asyncio.gather(*[tiingoML(ticker) for ticker in tickerList])
+        plotnames = await asyncio.gather(*[tiingoML(ticker, int(emitted_data['level'])) for ticker in tickerList])
         print(plotnames)
-        for email in subscribed_emails:
-            await sendEmail(
-                email,
-                "News subscription report",
-                f"This is your news subscription report for {tickers} : \n"
-                f" Summary : {emitted_data['summary']} \n"
-                f" Tickers : {emitted_data['tickers']} \n" 
-                f" Outlook : {emitted_data['sentiment']} \n"
-                f" Strength of outlook (1-10) : {emitted_data['level']}",
-                attachment_paths=plotnames
-            )
-        else:
-            print("No tickers found in DB")
+        email_body = f"""
+        <html>
+            <head>
+                <style>
+                    body {{
+                        font-family: 'Arial', sans-serif;
+                        margin: 0;
+                        padding: 0;
+                        color: #333;
+                        text-align: center;
+                        background-color: #f4f4f4;
+                    }}
+                    .container {{
+                        background-color: #fff;
+                        margin: 20px auto;
+                        padding: 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                        max-width: 600px;
+                    }}
+                    h1 {{
+                        color: #007BFF;
+                    }}
+                    p {{
+                        font-size: 16px;
+                    }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>News Subscription Report</h1>
+                    <p>This is your news subscription report for <strong>{tickers}</strong>.</p>
+                    <p><strong>Summary:</strong> {emitted_data['summary']}</p>
+                    <p><strong>Tickers:</strong> {emitted_data['tickers']}</p>
+                    <p><strong>Outlook:</strong> {emitted_data['sentiment']}</p>
+                    <p><strong>Strength of Outlook (1-10):</strong> {emitted_data['level']}</p>
+                </div>
+            </body>
+        </html>
+        """
+        for email_dict in subscribed_emails:
+            for email, is_subscribed in email_dict.items():
+                if is_subscribed:  # This checks if the value is True
+                    await sendEmail(
+                        email,
+                        "News Subscription Report",
+                        email_body,
+                        attachment_paths=plotnames,
+                        mime_type='text/html'  # Ensure the MIME type is set to 'text/html'
+                    )
+            else:
+                print("No tickers found in DB")
+        for phone in subscribed_numbers:
+            for phone, is_subscribed in phone.items():
+                if is_subscribed:
+                    sendSMS(f'{phone}', f"News Subscription Report\n"
+                                          f"This is your news subscription report for {tickers}.\n"
+                                          f"Summary: {emitted_data['summary']}\nTickers: {emitted_data['tickers']}\n"
+                                          f"Outlook: {emitted_data['sentiment']}\n"
+                                          f"Strength of Outlook (1-10): {emitted_data['level']}", plotnames)
 
-async def sendEmail(recipient_email, subject, message_body, attachment_paths=None):
+
+
+def sendSMS(recipient_phone, message, plotnames):
+    conn = http.client.HTTPSConnection("9l963y.api.infobip.com")
+    payload = json.dumps({
+        "messages": [
+            {
+                "destinations": [{"to": "13479253059"}],
+                "from": "ServiceSMS",
+                "text": "Congratulations on sending your first message.\nGo ahead and check the delivery report in the next step."
+            }
+        ]
+    })
+    headers = {
+        'Authorization': 'App 4415a0b712214f407b65f0a376d650bb-f7d5a550-cc21-4c5e-878a-4b92f76adcde',
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+    }
+    conn.request("POST", "/sms/2/text/advanced", payload, headers)
+    res = conn.getresponse()
+    data = res.read()
+    print(data)
+    # for plot in plotnames:
+    #     upload_file_to_s3(plot, "capstone499", f"{random.randrange(1,10000000)}s3")
+    print(f"SMS sent to {recipient_phone}")
+
+def upload_file_to_s3(file_name, bucket, object_name=None):
+    if object_name is None:
+        object_name = file_name
+
+    s3_client = boto3.client('s3')
+    try:
+        response = s3_client.upload_file(file_name, bucket, object_name, ExtraArgs={'ACL': 'public-read'})
+        return f"https://{bucket}.s3.amazonaws.com/{object_name}"
+    except FileNotFoundError:
+        print("The file was not found")
+        return None
+    except NoCredentialsError:
+        print("Credentials not available")
+        return None
+
+async def sendEmail(recipient_email, subject, message_body, attachment_paths=None, mime_type='text/plain'):
     sender_email = "mshvorin@gmail.com"
     app_password = gmailPass
 
@@ -113,7 +240,10 @@ async def sendEmail(recipient_email, subject, message_body, attachment_paths=Non
     message["From"] = sender_email
     message["To"] = recipient_email
     message["Subject"] = subject
-    message.attach(MIMEText(message_body, "plain"))
+    if mime_type == 'text/html':
+        message.attach(MIMEText(message_body, 'html'))
+    else:
+        message.attach(MIMEText(message_body, 'plain'))
 
     if attachment_paths:
         for att in attachment_paths:
@@ -143,6 +273,8 @@ async def summarize(news):
     except Exception as exception:
         print(f"Error: {exception}")
         return "Error. Try again."
+
+
 
 async def alpacaNewsStream(emit_message):
     uri = "wss://stream.data.alpaca.markets/v1beta1/news"
@@ -237,7 +369,7 @@ def generate_future_timestamps(last_timestamp, num_predictions, start_hour=9, en
         future_timestamps.append(current_timestamp)
     return future_timestamps
 
-async def tiingoML(ticker):
+async def tiingoML(ticker, sentimentScore):
     try:
         headers = {
             'Content-Type': 'application/json',
@@ -338,7 +470,7 @@ async def tiingoML(ticker):
             adjustment_factor = (last_known_price * acceptance_percentage) / abs(future_predictions[0] - last_known_price)
             future_predictions = [last_known_price + (p - last_known_price) * adjustment_factor for p in future_predictions]
 
-        sentiment_score = 3  # Subtle sentiment score (e.g., 1 for slightly positive, -1 for slightly negative)
+        sentiment_score = sentimentScore  # Subtle sentiment score (e.g., 1 for slightly positive, -1 for slightly negative)
         offset = 0
         print(future_predictions[0] / last_known_price)
         print( last_known_price / future_predictions[0])
@@ -390,3 +522,10 @@ async def tiingoML(ticker):
 # asyncio.run(tiingoML("AAPL"))
 # asyncio.run(tiingoML("MSFT"))
 # asyncio.run(tiingoML("TSLA"))
+# async def Historical():
+#     Data = await getHistoricalDBData()
+#     data = [d for d in Data if 'TSLA' in d['tickers']]
+#     await handleMessage(data[0])
+#
+# asyncio.run(Historical())
+# startAlpacaStream(lambda emit_message: print("message"))
