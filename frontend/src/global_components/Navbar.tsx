@@ -1,41 +1,36 @@
 import * as React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { PaletteMode } from '@mui/material';
-import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
-import Drawer from '@mui/material/Drawer';
+import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
-import ToggleColorMode from '../pages/Home_Page/components/ToggleColorMode';
+import Container from '@mui/material/Container';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import AdbIcon from '@mui/icons-material/Adb';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../useAuth';
+// import handleLogout  from "../pages/Home_Page/components/AppAppBar.js";
 
+// const pages = ['Products', 'Pricing', 'Blog'];
+// const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-const logoStyle = {
-  width: '140px',
-  height: 'auto',
-  cursor: 'pointer',
-};
+//todo:css 
 
-interface AppAppBarProps {
-  mode: PaletteMode;
-  toggleColorMode: () => void;
-}
+function Navbar() {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
-function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
-  const [open, setOpen] = React.useState(false);
-
-  const navigate = useNavigate(); // Get the navigate function from useNavigate hook
-  const { isLoggedIn } = useAuth(); // Get the isLoggedIn state from useAuth hook
-
-  const handleLogout = () => {
-    
+/*
+Navbar Todo:
+weird issue where touching blank black areas redirect to login
+nothing else i think
+*/
+  async function handleLogout():Promise<void>  {
     localStorage.removeItem("token");
-    window.location.reload();
     // Call the logout route on the client side
     fetch("/logout", {
       method: "POST",
@@ -45,9 +40,9 @@ function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
     })
     .then(response => {
       if (response.ok) {
-        console.log("RESPONSE WAS OKAY")
         // Navigate to the login page or any other desired page after logout
-        navigate('/');
+        console.log("RESPONSE WAS OKAY")
+        navigate('/home');
         //window.location.reload();
 
       } else {
@@ -58,241 +53,134 @@ function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
     .catch(error => {
       console.error('Logout error:', error);
     });
-    //navigate('/');
   };
-
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
-
-  const scrollToSection = (sectionId: string) => {
-    const sectionElement = document.getElementById(sectionId);
-    const offset = 128;
-    if (sectionElement) {
-      const targetScroll = sectionElement.offsetTop - offset;
-      sectionElement.scrollIntoView({ behavior: 'smooth' });
-      window.scrollTo({
-        top: targetScroll,
-        behavior: 'smooth',
-      });
-      setOpen(false);
-    }
-  };
-
-  function linkTo(pagename:string){
-    navigate(`/${pagename}`);
-
-  } 
-
-
 
   return (
-    <div>
-      <AppBar
-        position="fixed"
-        sx={{
-          boxShadow: 0,
-          bgcolor: 'transparent',
-          backgroundImage: 'none',
-          mt: 2,
-        }}
-      >
-        <Container maxWidth="lg">
-          <Toolbar
-            variant="regular"
-            sx={(theme) => ({
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              flexShrink: 0,
-              borderRadius: '999px',
-              bgcolor:
-                theme.palette.mode === 'light'
-                  ? 'rgba(255, 255, 255, 0.4)'
-                  : 'rgba(0, 0, 0, 0.4)',
-              backdropFilter: 'blur(24px)',
-              maxHeight: 40,
-              border: '1px solid',
-              borderColor: 'divider',
-              boxShadow:
-                theme.palette.mode === 'light'
-                  ? `0 0 1px rgba(85, 166, 246, 0.1), 1px 1.5px 2px -1px rgba(85, 166, 246, 0.15), 4px 4px 12px -2.5px rgba(85, 166, 246, 0.15)`
-                  : '0 0 1px rgba(2, 31, 59, 0.7), 1px 1.5px 2px -1px rgba(2, 31, 59, 0.65), 4px 4px 12px -2.5px rgba(2, 31, 59, 0.65)',
-            })}
+    <AppBar position="static" sx={{ backgroundColor:'#000000' }}>
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="/"
+            sx={{
+              mr: 1,
+              display: { xs: 'none', md: 'flex' },
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: '#00a34e',
+              textDecoration: 'none',
+            }}
           >
-            <Box
-              sx={{
-                flexGrow: 1,
-                display: 'flex',
-                alignItems: 'center',
-                ml: '-18px',
-                px: 0,
-              }}
-            >
-              <img
-                onClick={() => linkTo('')}
-                src={ 
-                  'https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg'
-                }
-                style={logoStyle}
-                alt="logo of MISK"
-              />
-              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                <MenuItem
-                  onClick={() => linkTo('profile')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Profile
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => linkTo('subscribe')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Subscribe
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => linkTo('news')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    News
-                  </Typography>
-                </MenuItem>
-                <MenuItem
-                  onClick={() => linkTo('admin_settings')}
-                  sx={{ py: '6px', px: '12px' }}
-                >
-                  <Typography variant="body2" color="text.primary">
-                    Admin Settings
-                  </Typography>
-                </MenuItem>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                gap: 0.5,
-                alignItems: 'center',
-              }}
-            >
+            MISK
+          </Typography>
+          <MenuItem sx={{ py: '6px', px: '12px' }} component="a" href="/login">
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="/news"
+            sx={{
+              mr: 1,
+              display: { xs: 'none', md: 'flex' },
+              fontSize: '0.875rem',
+              color: 'white',
+              textDecoration: 'none',
+            }}
+          >
+            NEWS
+          </Typography>
+          </MenuItem>
+          <MenuItem sx={{ py: '6px', px: '12px' }} component="a" href="/login">
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="/login"
+            sx={{
+              mr: 1,
+              display: { xs: 'none', md: 'flex' },
+              fontSize: '0.875rem',
+              color: 'white',
+              textDecoration: 'none',
+            }}
+          >
+            DASHBOARD
+          </Typography>
+          </MenuItem>
+          <MenuItem sx={{ py: '6px', px: '12px' }} component="a" href="/login">
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="/subscribe"
+            sx={{
+              mr: 1,
+              display: { xs: 'none', md: 'flex' },
+              fontSize: '0.875rem',
+              color: 'white',
+              textDecoration: 'none',
+            }}
+          >
+            TICKERS
+          </Typography>
+          </MenuItem>
+          <MenuItem sx={{ py: '6px', px: '12px' }} component="a" href="/login">
+          <Typography
+            variant="h6"
+            noWrap
+            component="a"
+            href="/profile"
+            sx={{
+              mr: 100,
+              display: { xs: 'none', md: 'flex' },
+              fontSize: '0.875rem',
+              color: 'white',
+              textDecoration: 'none',
+            }}
+          >
+            PROFILE
+          </Typography>
+          </MenuItem>
 
-              <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
-
-              {isLoggedIn && 
-                <Button color="primary" variant="text" size="small" onClick={handleLogout}>
-                  Logout
-                </Button>
-              }
-
-              {!isLoggedIn && 
-                <Link to="/login" style={{ textDecoration: 'none' }}>
-                  <Button color="primary" variant="text" size="small">
-                    Sign in
-                  </Button>
-                </Link>
-              }
-
-
-              {!isLoggedIn && 
-                <Link to="/register" style={{ textDecoration: 'none' }}>
-                  <Button color="primary" variant="contained" size="small">
-                    Sign up
-                  </Button>
-                </Link>
-              }
-
-              </Box>
-            <Box sx={{ display: { sm: '', md: 'none' } }}>
-              <Button
-                variant="text"
-                color="primary"
-                aria-label="menu"
-                onClick={toggleDrawer(true)}
-                sx={{ minWidth: '30px', p: '4px' }}
-              >
-                <MenuIcon />
-              </Button>
-              <Drawer anchor="right" open={open} onClose={toggleDrawer(false)}>
-                <Box
-                  sx={{
-                    minWidth: '60dvw',
-                    p: 2,
-                    backgroundColor: 'background.paper',
-                    flexGrow: 1,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'end',
-                      flexGrow: 1,
-                    }}
-                  >
-                    <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
-                  </Box>
-                  <MenuItem onClick={() => scrollToSection('features')}>
-                    Features
-                  </MenuItem>
-                  <MenuItem onClick={() => scrollToSection('testimonials')}>
-                    Testimonials
-                  </MenuItem>
-                  <MenuItem onClick={() => scrollToSection('highlights')}>
-                    Highlights
-                  </MenuItem>
-                  <MenuItem onClick={() => scrollToSection('pricing')}>
-                    Pricing
-                  </MenuItem>
-                  <MenuItem onClick={() => scrollToSection('faq')}>FAQ</MenuItem>
-                  <Divider />
-
-
-              <MenuItem>
-                  {isLoggedIn && 
-                <Button color="primary" variant="text" size="small" onClick={handleLogout}>
-                  Logout
-                </Button>
-              }
-              </MenuItem>
-
-
-
-                  <MenuItem>
-
-
-                  {!isLoggedIn && 
-                    <Link to="/register" style={{ textDecoration: 'none', width: '100%' }}>
-                      <Button color="primary" variant="contained" fullWidth>
-                        Sign up
-                      </Button>
-                    </Link>
-                    }
-                  </MenuItem>
-
-                  
-                  <MenuItem>
-                  {!isLoggedIn && 
-                    <Link to="/login" style={{ textDecoration: 'none', width: '100%' }}>
-                      <Button color="primary" variant="outlined" fullWidth >
-                        Sign in
-                      </Button>
-                    </Link>
-                    }
-                  </MenuItem>
-                  
-                  
-                </Box>
-              </Drawer>
-            </Box>
-          </Toolbar>
-        </Container>
-      </AppBar>
-    </div>
+          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
+          <Typography
+            variant="h5"
+            noWrap
+            component="a"
+            href="#app-bar-with-responsive-menu"
+            sx={{
+              mr: 2,
+              display: { xs: 'flex', md: 'none' },
+              flexGrow: 1,
+              fontFamily: 'monospace',
+              fontWeight: 700,
+              letterSpacing: '.3rem',
+              color: 'inherit',
+              textDecoration: 'none',
+            }}
+          >
+            LOGO
+          </Typography>
+          <Box sx={{ flexGrow: 0 }}>
+            <Tooltip title="Open settings">
+              <IconButton onClick={handleLogout} sx={{ p: 0 }}>
+                <Typography sx={{
+              mr: 1,
+              display: { xs: 'none', md: 'flex' },
+              fontSize: '0.875rem',
+              color: 'red',
+              textDecoration: 'none',
+            }}>LOGOUT<PowerSettingsNewIcon></PowerSettingsNewIcon></Typography>
+                
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 }
-
 export default Navbar;

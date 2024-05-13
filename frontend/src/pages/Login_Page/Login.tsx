@@ -79,7 +79,7 @@ export default function SignInSide() {
         localStorage.setItem('token', data.token);
         console.log('Token stored in localStorage:', data.token);
         setAuthentication(data.authenticated, data.token); //store token and use verify instead
-        navigate('/profile');
+        navigate('/');
       } else {
         console.error('Failed to login:', response.statusText);
       }

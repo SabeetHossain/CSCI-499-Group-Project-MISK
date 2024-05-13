@@ -21,14 +21,9 @@ import { PaletteMode } from '@mui/material';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { CircularProgress } from '@mui/material';
-import CssBaseline from '@mui/material/CssBaseline';
 //toastify for toasts
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
-
 
 
 /*
@@ -41,50 +36,6 @@ Todo:
   -the logged in use effect might need to be changed cause its always active.
   -weird visual bug upon page redirect when clicking profile page on navbar (firefox) while im inside the username field.(i have an idea on how to fix this)
 */
-
-// interface ToggleCustomThemeProps {
-//   showCustomTheme: Boolean;
-//   toggleCustomTheme: () => void;
-// }
-
-// function ToggleCustomTheme({
-//   showCustomTheme,
-//   toggleCustomTheme,
-// }: ToggleCustomThemeProps) {
-//   return (
-//     <Box
-//       sx={{
-//         display: 'flex',
-//         flexDirection: 'column',
-//         alignItems: 'center',
-//         width: '100dvw',
-//         position: 'fixed',
-//         bottom: 24,
-//       }}
-//     >
-//       <ToggleButtonGroup
-//         color="primary"
-//         exclusive
-//         value={showCustomTheme}
-//         onChange={toggleCustomTheme}
-//         aria-label="Platform"
-//         sx={{
-//           backgroundColor: 'background.default',
-//           '& .Mui-selected': {
-//             pointerEvents: 'none',
-//           },
-//         }}
-//       >
-//         <ToggleButton value>
-//           <AutoAwesomeRoundedIcon sx={{ fontSize: '20px', mr: 1 }} />
-//           Custom theme
-//         </ToggleButton>
-//         <ToggleButton value={false}>Material Design 2</ToggleButton>
-//       </ToggleButtonGroup>
-//     </Box>
-//   );
-// }
-
 
 const Profile = () => {
   const navigate = useNavigate(); // Get the navigate function from useNavigate hook
@@ -104,15 +55,6 @@ const Profile = () => {
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const LPtheme = createTheme(getLPTheme(mode));
   const defaultTheme = createTheme({ palette: { mode } });
-
-  const toggleColorMode = () => {
-    setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
-  };
-
-  const toggleCustomTheme = () => {
-    setShowCustomTheme((prev) => !prev);
-  };
-
   
   interface JwtPayload {
     userId: string;
@@ -247,7 +189,7 @@ const Profile = () => {
   
   return (
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
-    <Navbar mode={mode} toggleColorMode={toggleColorMode}></Navbar>
+    <Navbar></Navbar>
     <Grid container sx={{ backgroundColor: '#3b3355' }}>
       <Grid item xs={12} md={1} sx={{ backgroundColor: '#00a34e', position: 'sticky', top: 0 }}>
         <Grid sx={{height: '100vh'}}>
@@ -357,17 +299,6 @@ const Profile = () => {
             sx={{ mt: 3, mb: 2 }}
           >
             Cancel
-          </Button>
-          <Divider sx={{ backgroundColor: '#fff', my: 2 }} />
-      </Box>
-      <Box>
-      <Typography variant='h4'>Delete Account</Typography>
-      <Button
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Delete Account
           </Button>
       </Box>
       </Grid>
