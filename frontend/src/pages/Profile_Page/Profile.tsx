@@ -21,9 +21,14 @@ import { PaletteMode } from '@mui/material';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { CircularProgress } from '@mui/material';
+import CssBaseline from '@mui/material/CssBaseline';
 //toastify for toasts
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
+
 
 
 /*
@@ -36,6 +41,50 @@ Todo:
   -the logged in use effect might need to be changed cause its always active.
   -weird visual bug upon page redirect when clicking profile page on navbar (firefox) while im inside the username field.(i have an idea on how to fix this)
 */
+
+// interface ToggleCustomThemeProps {
+//   showCustomTheme: Boolean;
+//   toggleCustomTheme: () => void;
+// }
+
+// function ToggleCustomTheme({
+//   showCustomTheme,
+//   toggleCustomTheme,
+// }: ToggleCustomThemeProps) {
+//   return (
+//     <Box
+//       sx={{
+//         display: 'flex',
+//         flexDirection: 'column',
+//         alignItems: 'center',
+//         width: '100dvw',
+//         position: 'fixed',
+//         bottom: 24,
+//       }}
+//     >
+//       <ToggleButtonGroup
+//         color="primary"
+//         exclusive
+//         value={showCustomTheme}
+//         onChange={toggleCustomTheme}
+//         aria-label="Platform"
+//         sx={{
+//           backgroundColor: 'background.default',
+//           '& .Mui-selected': {
+//             pointerEvents: 'none',
+//           },
+//         }}
+//       >
+//         <ToggleButton value>
+//           <AutoAwesomeRoundedIcon sx={{ fontSize: '20px', mr: 1 }} />
+//           Custom theme
+//         </ToggleButton>
+//         <ToggleButton value={false}>Material Design 2</ToggleButton>
+//       </ToggleButtonGroup>
+//     </Box>
+//   );
+// }
+
 
 const Profile = () => {
   const navigate = useNavigate(); // Get the navigate function from useNavigate hook
@@ -55,6 +104,15 @@ const Profile = () => {
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
   const LPtheme = createTheme(getLPTheme(mode));
   const defaultTheme = createTheme({ palette: { mode } });
+
+  const toggleColorMode = () => {
+    setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
+  const toggleCustomTheme = () => {
+    setShowCustomTheme((prev) => !prev);
+  };
+
   
   interface JwtPayload {
     userId: string;
@@ -189,14 +247,8 @@ const Profile = () => {
   
   return (
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
-    <Navbar></Navbar>
-    <Grid container sx={{ backgroundColor: '#3b3355' }}>
-      <Grid item xs={12} md={1} sx={{ backgroundColor: '#00a34e', position: 'sticky', top: 0 }}>
-        <Grid sx={{height: '100vh'}}>
-          <Settings_Navbar />
-        </Grid>
-      </Grid>
-      <div>
+<Navbar mode={mode} toggleColorMode={toggleColorMode}></Navbar>
+    <Grid container sx={{ bgcolor: 'background.default' }}>
       <ToastContainer position="top-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -208,42 +260,44 @@ const Profile = () => {
         pauseOnHover
         theme="light"
       />
-      </div>
-      <Grid item xs={12} md={11}sx={{ height: '100%' }}>
-      <Typography component = "div" variant="h3" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 2 }}>
+      <Grid item xs={12} md={11}sx={{ height: '100%', bgcolor: 'background.default'  }}>
+      <Typography color="text.primary" component = "div" variant="h3" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 12}}>
+
+
           Profile Settings
           <ManageAccountsIcon sx={{ fontSize: 'inherit', ml: '5px'}} />
       </Typography>
-    <Box>
+      </Grid>
+      <Grid  item xs={12} md={11}sx={{ height: '100%', bgcolor: 'background.default' }}>
       {userInfo ? (
         <Box sx={{
-          backgroundColor: '#546e7a', ml:5, mr:5, p: 3}}> 
-          <Typography variant="h6" sx={{ color: '#fff', mb: 2 }}>User Info</Typography>
-          <Typography sx={{ color: '#fff', mb: 1 }}>Username: {userInfo.username}</Typography>
-          <Typography sx={{ color: '#fff', mb: 1 }}>Email: {userInfo.email}</Typography>
-          <Divider sx={{ backgroundColor: '#fff', my: 2 }} />
+          bgcolor: 'background.default', ml:5, mr:5, p: 3, textAlign:'center'}}>
+          {/* <Typography  color="text.secondary"  variant="h6" sx={{ mb: 2 }}>User Info</Typography> */}
+          <Typography   color="text.secondary"sx={{  mb: 1 }}>Username: {userInfo.username}</Typography>
+          <Typography   color="text.secondary" sx={{  mb: 1 }}>Email: {userInfo.email}</Typography>
+          <Divider    color="text.secondary"sx={{ backgroundColor: '#fff', my: 2 }} />
         </Box>
       ) : (
-        <Box sx={{ color: '#fff', textAlign: 'center', fontStyle: 'italic' }}>
+        <Box sx={{ bgcolor: 'background.default', textAlign: 'center', fontStyle: 'italic' }}>
           <CircularProgress color="inherit" />
-          <Typography>Loading user information...</Typography>
+          <Typography color="text.secondary">Loading user information...</Typography>
         </Box>
       )}
-    </Box>
-    
-    <Box component="form" onSubmit={handleSubmitChanges}
+      </Grid>
+      <Grid item xs={12} md={11} sx={{ height: '100%', bgcolor: 'background.default'}}>
+      <Box  component="form" onSubmit={handleSubmitChanges}
     sx={{
-      '& > :not(style)': { m: 1, width: '25ch' }, backgroundColor: '#546e7a',  ml:5, mr:5, p: 3 
-    }}
+      // alignItems: cenre
+      bgcolor: 'background.default',
+      ml:5, mr:5, p: 3, textAlign:'center'}}
     noValidate
     autoComplete="off">
-      <Typography variant='h4'>Update Credentials</Typography>
-      <Grid container spacing={2}>
+      <Typography color="text.primary" variant='h4' sx={{alignItems: 'center'}}>Update Credentials</Typography>
+      <Grid container spacing={2} sx={{bgcolor: 'background.default'}}>
             <Grid item xs={12}>
               <TextField
                 autoComplete="username"
                 name="username"
-                fullWidth
                 id="username"
                 label="Username"
                 autoFocus
@@ -251,9 +305,8 @@ const Profile = () => {
                 onChange={(e) => setUsername(e.target.value)}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{bgcolor: 'background.default'}}>
               <TextField
-                fullWidth
                 id="currentpassword"
                 label="Current Password"
                 name="currentpassword"
@@ -262,9 +315,8 @@ const Profile = () => {
                 onChange={(e) => setCurrentPassword(e.target.value)}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{bgcolor: 'background.default'}}>
               <TextField
-                fullWidth
                 id="newpassword"
                 label="New Password"
                 name="newpassword"
@@ -273,9 +325,8 @@ const Profile = () => {
                 onChange={(e) => setNewPassword(e.target.value)}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{bgcolor: 'background.default'}}>
               <TextField
-                fullWidth
                 id="email"
                 label="Email Address"
                 name="email"
@@ -286,28 +337,41 @@ const Profile = () => {
           </Grid>
           <Button
             type="submit"
-            fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: 3, mb: 2, backgroundColor:'#006400 !important'}}
           >
             Update Profile
           </Button>
           <Button
             onClick={clearFields}
-            fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+
+            sx={{ml:3, mt: 3, mb: 2, backgroundColor:'#ff0000 !important'}}
           >
             Cancel
           </Button>
+          <Divider color="text.secondary"sx={{ backgroundColor: '#fff', my: 2 }} />
       </Box>
+      {/* <Box sx={{bgcolor: 'background.default'}}></Box> */}
       </Grid>
+      <Grid item xs={12} md={11} sx={{ height: '100%', bgcolor: 'background.default', textAlign:'center'}}>
+      <Typography color="text.primary" variant='h4' sx={{alignItems: 'center'}}>Delete Account</Typography>
+      <Typography   color="text.secondary"sx={{  mb: 1 }}>If you delete your account, all information will be lost and the changes CANNOT be undone</Typography>
+      <Button
+            onClick={clearFields}
+            variant="contained"
+            sx={{ml:3, mt: 3, mb: 2, backgroundColor:'#ff0000 !important'}}
+          >
+            Delete
+          </Button>
+      </Grid>
+
+    
     </Grid>
   </ThemeProvider>
 );
 };
 
 export default Profile;
-
 
 
