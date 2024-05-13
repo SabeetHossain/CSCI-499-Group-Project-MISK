@@ -264,6 +264,14 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
               </MenuItem>
 
 
+              <MenuItem>
+                  {isLoggedIn ? (
+                  <Button component={Link} to="/Profile" variant="outlined">
+                    Profile
+                  </Button>
+                ) : null}
+              </MenuItem>
+
 
                   <MenuItem>
 
