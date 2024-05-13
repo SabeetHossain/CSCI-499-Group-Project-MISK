@@ -87,8 +87,8 @@ export default function FAQ() {
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
               Absolutely! We offer a hassle-free return policy. If you&apos;re not
-              completely satisfied, you can return the product within [number of
-              days] days for a full refund or exchange.
+              completely satisfied, you can return the product within 30 
+              days for a full refund or exchange.
             </Typography>
           </AccordionDetails>
         </Accordion>
@@ -136,7 +136,7 @@ export default function FAQ() {
               gutterBottom
               sx={{ maxWidth: { sm: '100%', md: '70%' } }}
             >
-              Yes, our product comes with a [length of warranty] warranty. It covers
+              Yes, our product comes with a 2 year warranty. It covers
               defects in materials and workmanship. If you encounter any issues
               covered by the warranty, please contact our customer support for
               assistance.
