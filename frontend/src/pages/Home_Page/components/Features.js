@@ -12,6 +12,7 @@ import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded';
 import DevicesRoundedIcon from '@mui/icons-material/DevicesRounded';
 import EdgesensorHighRoundedIcon from '@mui/icons-material/EdgesensorHighRounded';
 import ViewQuiltRoundedIcon from '@mui/icons-material/ViewQuiltRounded';
+const Logo = require('./Logo.png').default;
 
 const items = [
   {
@@ -26,7 +27,7 @@ const items = [
     icon: <EdgesensorHighRoundedIcon />,
     title: 'Mobile integration',
     description:
-      'This item could provide information about the mobile app version of the product.',
+    'This feature is coming soon! Stay tuned!',
     imageLight: 'url("/static/images/templates/templates-images/mobile-light.png")',
     imageDark: 'url("/static/images/templates/templates-images/mobile-dark.png")',
   },
@@ -238,34 +239,16 @@ export default function Features() {
           </Stack>
         </Grid>
         <Grid
-          item
-          xs={12}
-          md={6}
-          sx={{ display: { xs: 'none', sm: 'flex' }, width: '100%' }}
-        >
-          <Card
-            variant="outlined"
-            sx={{
-              height: '100%',
-              width: '100%',
-              display: { xs: 'none', sm: 'flex' },
-              pointerEvents: 'none',
-            }}
-          >
-            <Box
-              sx={{
-                m: 'auto',
-                width: 420,
-                height: 500,
-                backgroundSize: 'contain',
-                backgroundImage: (theme) =>
-                  theme.palette.mode === 'light'
-                    ? items[selectedItemIndex].imageLight
-                    : items[selectedItemIndex].imageDark,
-              }}
-            />
-          </Card>
-        </Grid>
+  item
+  xs={12}
+  md={6}
+  sx={{ display: { xs: 'none', sm: 'flex' }, width: '100%' }}
+>
+  {/* Render the image from the Imgur URL */}
+  <img src="https://i.imgur.com/DD0zLbT.png" alt="Logo" />
+</Grid>
+
+
       </Grid>
     </Container>
   );

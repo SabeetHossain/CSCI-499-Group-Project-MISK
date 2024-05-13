@@ -183,6 +183,13 @@ function AppAppBar({ mode, toggleColorMode }) {
                 </Button>
               }
 
+              <MenuItem>
+                  {isLoggedIn ? (
+                  <Button component={Link} to="/Profile" variant="outlined">
+                    Profile
+                  </Button>
+                ) : null}
+              </MenuItem>
 
               {!isLoggedIn && 
                 <Link to="/login" style={{ textDecoration: 'none' }}>
