@@ -195,7 +195,7 @@
 }
 
 .element .path-wrapper {
-  background-image: url(../../../static/img/path-3.png);
+  background-image: url(../../assets/path-3.png);
   background-size: 100% 100%;
   height: 10px;
   left: 6px;
