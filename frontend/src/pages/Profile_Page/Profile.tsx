@@ -109,10 +109,6 @@ const Profile = () => {
     setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
 
-  const toggleCustomTheme = () => {
-    setShowCustomTheme((prev) => !prev);
-  };
-
   
   interface JwtPayload {
     userId: string;
@@ -276,8 +272,9 @@ const Profile = () => {
   
   return (
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
-<Navbar mode={mode} toggleColorMode={toggleColorMode}></Navbar>
-    <Grid container sx={{ bgcolor: 'background.default' }}>
+      <CssBaseline/>
+      <Navbar mode={mode} toggleColorMode={toggleColorMode}></Navbar>
+      <Grid container sx={{ bgcolor: 'background.default' }}>
       <ToastContainer position="top-right"
         autoClose={5000}
         hideProgressBar={false}
@@ -291,8 +288,6 @@ const Profile = () => {
       />
       <Grid item xs={12} md={11}sx={{ height: '100%', bgcolor: 'background.default'  }}>
       <Typography color="text.primary" component = "div" variant="h3" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 12}}>
-
-
           Profile Settings
           <ManageAccountsIcon sx={{ fontSize: 'inherit', ml: '5px'}} />
       </Typography>
