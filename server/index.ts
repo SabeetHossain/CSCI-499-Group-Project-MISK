@@ -532,6 +532,94 @@ app.put(
 	},
 );
 
+app.put('/users/phone/:userId', async (req: express.Request, res:express.Response) => {
+	try{
+		let statusValue:string = 'placeholder';
+		let statusMessage:string = 'placeholder';
+		console.log('this is req.params: ' + req.params);
+		console.log('this is req.body: '+ req.body);
+
+		const { userId } = req.params;
+		const user = await pool.query(
+			'SELECT * FROM users WHERE user_id = $1',
+			[userId],
+		);
+		const phoneSubbed = await pool.query(
+			'SELECT phonesubbed FROM users WHERE user_id = $1',
+			[userId],
+		);
+		console.log('phonesubbed: '+phoneSubbed.rows[0].phonesubbed)
+		let phoneSubscribedBody:boolean = req.body.phoneSubscribed;
+		console.log('phone notifications are enabled: ' + phoneSubscribedBody);
+
+		if(phoneSubscribedBody === true)
+        {
+			phoneSubscribedBody = false;
+			statusMessage = 'You will no longer be getting phone notifications';
+			statusValue = 'info';
+        }
+		else
+		{
+			phoneSubscribedBody = true;
+			statusMessage = 'You will now be getting phone notifications!';
+			statusValue = 'info';
+		}
+		const updatePhoneSubbed = await pool.query(
+			'UPDATE users SET phonesubbed = $1 WHERE user_id = $2',
+			[phoneSubscribedBody, userId],
+		);
+		res.json({message: statusMessage, value: statusValue});
+	}
+	catch (err) {
+		console.error((err as Error).message);
+	}
+	}
+);
+
+app.put('/users/email/:userId', async (req: express.Request, res:express.Response) => {
+	try{
+		let statusValue:string = 'placeholder';
+		let statusMessage:string = 'placeholder';
+		console.log('this is req.params: ' + req.params);
+		console.log('this is req.body: '+ req.body);
+
+		const { userId } = req.params;
+		const user = await pool.query(
+			'SELECT * FROM users WHERE user_id = $1',
+			[userId],
+		);
+		const emailSubbed = await pool.query(
+			'SELECT emailsubbed FROM users WHERE user_id = $1',
+			[userId],
+		);
+		console.log('emailsubbed: '+emailSubbed.rows[0].emailsubbed)
+		let emailSubscribedBody:boolean = req.body.emailSubscribed;
+		console.log('email notifications are enabled: ' + emailSubscribedBody);
+
+		if(emailSubscribedBody === true)
+        {
+			emailSubscribedBody = false;
+			statusMessage = 'You will no longer be getting email notifications';
+			statusValue = 'info';
+        }
+		else
+		{
+			emailSubscribedBody = true;
+			statusMessage = 'You will now be getting email notifications!';
+			statusValue = 'info';
+		}
+		const updateEmailSubbed = await pool.query(
+			'UPDATE users SET emailsubbed = $1 WHERE user_id = $2',
+			[emailSubscribedBody, userId],
+		);
+		res.json({message: statusMessage, value: statusValue});
+	}
+	catch (err) {
+		console.error((err as Error).message);
+	}
+	}
+);
+
 // get settings
 
 app.get('/settings', async (req: express.Request, res: express.Response) => {
