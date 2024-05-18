@@ -1,18 +1,14 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { alpha } from '@mui/material';
-import { Link } from 'react-router-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-//import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useDispatch } from 'react-redux';
-// import { setData } from './Actions';
-import { useState } from 'react';
 
 export default function Hero() {
   
@@ -49,7 +45,7 @@ export default function Hero() {
               fontSize: 'clamp(3.5rem, 10vw, 4rem)',
             }}
           >
-            Begin Your&nbsp;
+            Begin Your 
             <Typography
               component="span"
               variant="h1"
@@ -91,76 +87,49 @@ export default function Hero() {
                 ariaLabel: 'Enter your email address',
               }}
             />
-
-					<Stack
-						component="form"
-						direction={{ xs: 'column', sm: 'row' }}
-						alignSelf="center"
-						spacing={1}
-						useFlexGap
-						sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
-						onSubmit={(event) => {
-							event.preventDefault();
-							ticker && navigate('/ticker/' + ticker);
-						}}
-					>
-						<TextField
-							id="outlined-basic"
-							hiddenLabel
-							size="small"
-							variant="outlined"
-							aria-label="Enter a Ticker!"
-							placeholder="Your Ticker"
-							inputProps={{
-								autocomplete: 'off',
-								ariaLabel: 'Enter your email address',
-							}}
-							value={ticker}
-							onChange={({ target: { value } }) =>
-								setTicker(value)
-							}
-						/>
-
-      <Link to='#' style={{ textDecoration: 'none' }}>
-          <Button variant="contained" color="primary">
-            Search for a Ticker
-          </Button>
-        </Link>
-      </Stack>
-      <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
-        By clicking &quot;Search for a Ticker&quot; you agree to our&nbsp;
-        <Link to="#" color="primary">
-          Terms & Conditions
-        </Link>
-        .
-      </Typography>
-    </Stack>
-
-
-        {/* <Box
-          id="image"
-          sx={(theme) => ({
-            mt: { xs: 8, sm: 10 },
-            alignSelf: 'center',
-            height: { xs: 200, sm: 700 },
-            width: '100%',
-            backgroundImage:
-              theme.palette.mode === 'light'
-                ? 'url("/static/images/templates/templates-images/hero-light.png")'
-                : 'url("/static/images/templates/templates-images/hero-dark.png")',
-            backgroundSize: 'cover',
-            borderRadius: '10px',
-            outline: '1px solid',
-            outlineColor:
-              theme.palette.mode === 'light'
-                ? alpha('#BFCCD9', 0.5)
-                : alpha('#9CCCFC', 0.1),
-            boxShadow:
-              theme.palette.mode === 'light'
-                ? `0 0 12px 8px ${alpha('#9CCCFC', 0.2)}`
-                : `0 0 24px 12px ${alpha('#033363', 0.2)}`,
-          })}
-        /> */}
+          </Stack>
+          <Stack
+            component="form"
+            direction={{ xs: 'column', sm: 'row' }}
+            alignSelf="center"
+            spacing={1}
+            useFlexGap
+            sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
+            onSubmit={(event) => {
+              event.preventDefault();
+              ticker && navigate('/ticker/' + ticker);
+            }}
+          >
+            <TextField
+              id="outlined-basic"
+              hiddenLabel
+              size="small"
+              variant="outlined"
+              aria-label="Enter a Ticker!"
+              placeholder="Your Ticker"
+              inputProps={{
+                autocomplete: 'off',
+                ariaLabel: 'Enter your email address',
+              }}
+              value={ticker}
+              onChange={({ target: { value } }) =>
+                setTicker(value)
+              }
+            />
+            <Link to='#' style={{ textDecoration: 'none' }}>
+              <Button variant="contained" color="primary">
+                Search for a Ticker
+              </Button>
+            </Link>
+          </Stack>
+          <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
+            By clicking "Search for a Ticker" you agree to our 
+            <Link to="#" color="primary">
+              Terms & Conditions
+            </Link>
+            .
+          </Typography>
+        </Stack>
       </Container>
     </Box>
   );
