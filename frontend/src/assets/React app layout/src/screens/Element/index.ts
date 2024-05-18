@@ -1,1 +1,1 @@
-export { Element } from "./Element";
+export { Element } from "../../../../../pages/Home_Page/components/Element";

@@ -26,6 +26,7 @@ import Footer from './components/Footer';
 import getLPTheme from './getLPTheme';
 import { useAuth } from "../../useAuth"; // Import useAuth hook
 
+
 interface ToggleCustomThemeProps {
   showCustomTheme: Boolean;
   toggleCustomTheme: () => void;
@@ -94,7 +95,11 @@ export default function LandingPage() {
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
       <CssBaseline />
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
+      {/* {isLoggedIn && <h1>Welcome, User!</h1>} Display welcome message if logged in */}
       <Hero />
+      {/* <nav className = "navbar">
+        <Link to='/Profile'>Profile</Link>
+      </nav> */}
       <Box sx={{ bgcolor: 'background.default' }}>
         <Features />
         <Divider />

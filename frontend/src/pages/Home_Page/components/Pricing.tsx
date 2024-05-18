@@ -112,6 +112,7 @@ export default function Pricing() {
               }}
             >
               <CardContent>
+
                 <Box
                   sx={{
                     mb: 1,
@@ -195,8 +196,10 @@ export default function Pricing() {
                     </Typography>
                   </Box>
                 ))}
+                
               </CardContent>
               {tier.title !== 'Professional' && tier.title !== 'Enterprise' && (
+
               <CardActions>
               <Button
                 fullWidth

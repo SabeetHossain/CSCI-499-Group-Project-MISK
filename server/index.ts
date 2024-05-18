@@ -97,7 +97,7 @@ app.post("/login", async (req, res) => {
 declare global {
   namespace Express {
     interface Request {
-      userID?: string;
+      userID?: string; // Define userID property as optional, solves typescript error in verifyJWT function under req.userID
     }
   }
 }
@@ -112,7 +112,7 @@ const verifyJWT = (req: express.Request, res: express.Response, next: express.Ne
       if (err) {
         return res.status(200).json({ authenticated: false, message: "Failed to authenticate token" });
       } else {
-        //store decoded user ID in request object for further processing
+        // Store decoded user ID in request object for further processing
         req.userID = decoded.userId;
         next();
       }
@@ -137,6 +137,7 @@ app.post('/isUserAuth', verifyJWT, (req,res) =>{
 // Logout route
 app.post("/logout", (req, res) => {
   //stub route for now
+  // Respond with a success message or any relevant response
   res.json({ message: "Logout successful" });
 });
 
@@ -620,6 +621,7 @@ app.put('/users/email/:userId', async (req: express.Request, res:express.Respons
 	}
 );
 
+
 // get settings
 
 app.get('/settings', async (req: express.Request, res: express.Response) => {
@@ -638,6 +640,7 @@ app.get('/settings', async (req: express.Request, res: express.Response) => {
 
 
 // set settings
+
 
 app.post('/settings', async (req: express.Request, res: express.Response) => {
 	try {

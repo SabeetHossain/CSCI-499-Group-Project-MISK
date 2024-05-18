@@ -1,0 +1,809 @@
+.element {
+  background-color: #b2e7ea;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}
+
+.element .div {
+  background-color: #b2e7ea;
+  border: 0px none;
+  height: 896px;
+  position: relative;
+  width: 414px;
+}
+
+.element .header {
+  background-color: transparent;
+  height: 19px;
+  left: 14px;
+  mix-blend-mode: normal;
+  position: absolute;
+  top: 48px;
+  width: 386px;
+}
+
+.element .icon {
+  height: 18px;
+  left: 0;
+  position: absolute;
+  top: 1px;
+  width: 18px;
+}
+
+.element .apple-inc {
+  color: #000001;
+  font-family: "SF Pro Text-SemiBold", Helvetica;
+  font-size: 16px;
+  font-weight: 600;
+  left: 149px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  white-space: nowrap;
+}
+
+.element .text-wrapper {
+  color: #000001;
+  font-family: "SF Pro Text-SemiBold", Helvetica;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.element .icon-2 {
+  height: 18px;
+  left: 384px;
+  position: absolute;
+  top: 1px;
+  width: 2px;
+}
+
+.element .oval {
+  border-radius: 2px/2.12px;
+  height: 4px;
+  left: -1px;
+  position: absolute;
+  top: 7px;
+  width: 4px;
+}
+
+.element .oval-2 {
+  border-radius: 2px/2.12px;
+  height: 4px;
+  left: -1px;
+  position: absolute;
+  top: -1px;
+  width: 4px;
+}
+
+.element .oval-3 {
+  border-radius: 2px/2.12px;
+  height: 4px;
+  left: -1px;
+  position: absolute;
+  top: 15px;
+  width: 4px;
+}
+
+.element .section {
+  height: 156px;
+  left: 14px;
+  position: absolute;
+  top: 641px;
+  width: 386px;
+}
+
+.element .card {
+  background-color: #cbe5f0;
+  border-radius: 8px;
+  box-shadow: 0px 2px 48px #0000000a;
+  height: 71px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 186px;
+}
+
+.element .overlap-group-wrapper {
+  border-radius: 15px;
+  height: 30px;
+  left: 14px;
+  position: absolute;
+  top: 21px;
+  width: 30px;
+}
+
+.element .overlap-group {
+  height: 22px;
+  left: 9px;
+  position: relative;
+  top: 4px;
+  width: 12px;
+}
+
+.element .path {
+  height: 22px;
+  left: 6px;
+  position: absolute;
+  top: 0;
+  width: 1px;
+}
+
+.element .img {
+  height: 14px;
+  left: 0;
+  position: absolute;
+  top: 4px;
+  width: 12px;
+}
+
+.element .text {
+  height: 43px;
+  left: 58px;
+  position: absolute;
+  top: 14px;
+  width: 78px;
+}
+
+.element .span-wrapper {
+  color: #000001;
+  font-family: "SF Pro Text-SemiBold", Helvetica;
+  font-size: 16px;
+  font-weight: 600;
+  left: 0;
+  letter-spacing: 0.89px;
+  line-height: normal;
+  position: absolute;
+  top: 24px;
+  white-space: nowrap;
+}
+
+.element .p {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 0;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+}
+
+.element .span {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.element .card-2 {
+  background-color: #cbe5f0;
+  border-radius: 8px;
+  box-shadow: 0px 2px 48px #0000000a;
+  height: 71px;
+  left: 200px;
+  position: absolute;
+  top: 0;
+  width: 186px;
+}
+
+.element .path-wrapper {
+  /* background-image: url(../../../static/img/path-3.png); */
+  background-size: 100% 100%;
+  height: 10px;
+  left: 6px;
+  position: relative;
+  top: 10px;
+  width: 18px;
+}
+
+.element .path-2 {
+  height: 5px;
+  left: 13px;
+  position: absolute;
+  top: 0;
+  width: 5px;
+}
+
+.element .text-2 {
+  height: 43px;
+  left: 58px;
+  position: absolute;
+  top: 14px;
+  width: 100px;
+}
+
+.element .card-3 {
+  background-color: #cbe5f0;
+  border-radius: 8px;
+  box-shadow: 0px 2px 48px #0000000a;
+  height: 71px;
+  left: 0;
+  position: absolute;
+  top: 85px;
+  width: 186px;
+}
+
+.element .overlap-group-2 {
+  height: 14px;
+  left: 8px;
+  position: relative;
+  top: 8px;
+  width: 14px;
+}
+
+.element .path-3 {
+  height: 14px;
+  left: 6px;
+  position: absolute;
+  top: 0;
+  width: 1px;
+}
+
+.element .path-4 {
+  height: 7px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 14px;
+}
+
+.element .text-3 {
+  height: 43px;
+  left: 58px;
+  position: absolute;
+  top: 14px;
+  width: 116px;
+}
+
+.element .span-wrapper-2 {
+  color: #419436;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 74px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  top: 27px;
+  white-space: nowrap;
+}
+
+.element .text-wrapper-2 {
+  color: #419436;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.element .card-4 {
+  background-color: #cbe5f0;
+  border-radius: 8px;
+  box-shadow: 0px 2px 48px #0000000a;
+  height: 71px;
+  left: 200px;
+  position: absolute;
+  top: 85px;
+  width: 186px;
+}
+
+.element .path-5 {
+  height: 7px;
+  left: 0;
+  position: absolute;
+  top: 7px;
+  width: 14px;
+}
+
+.element .text-4 {
+  height: 43px;
+  left: 58px;
+  position: absolute;
+  top: 14px;
+  width: 115px;
+}
+
+.element .span-wrapper-3 {
+  color: #ff0000;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 75px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  top: 27px;
+  white-space: nowrap;
+}
+
+.element .text-wrapper-3 {
+  color: #ff0000;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.element .tab-menu {
+  background-color: #cbe5f0;
+  box-shadow: 0px 2px 48px #00000014;
+  height: 64px;
+  left: 0;
+  position: absolute;
+  top: 832px;
+  width: 414px;
+}
+
+.element .icon-3 {
+  height: 20px;
+  left: 69px;
+  position: absolute;
+  top: 22px;
+  width: 18px;
+}
+
+.element .icon-4 {
+  height: 20px;
+  left: 195px;
+  position: absolute;
+  top: 22px;
+  width: 24px;
+}
+
+.element .icon-5 {
+  height: 20px;
+  left: 315px;
+  position: absolute;
+  top: 22px;
+  width: 18px;
+}
+
+.element .tab {
+  height: 21px;
+  left: 14px;
+  position: absolute;
+  top: 582px;
+  width: 386px;
+}
+
+.element .overview {
+  color: #0b77a2;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 0;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+}
+
+.element .text-wrapper-4 {
+  color: #0b77a2;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.element .market-stats {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 102px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  white-space: nowrap;
+}
+
+.element .financialas {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 203px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  white-space: nowrap;
+}
+
+.element .institutional {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 319px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  text-align: right;
+  top: 0;
+  white-space: nowrap;
+}
+
+.element .progress-bar {
+  height: 1px;
+  left: 0;
+  position: absolute;
+  top: 20px;
+  width: 386px;
+}
+
+.element .bar-chart {
+  height: 348px;
+  left: 14px;
+  position: absolute;
+  top: 151px;
+  width: 387px;
+}
+
+.element .text-5 {
+  height: 314px;
+  left: 0;
+  position: absolute;
+  top: 34px;
+  width: 26px;
+}
+
+.element .span-wrapper-4 {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 0;
+  letter-spacing: 0.86px;
+  line-height: normal;
+  position: absolute;
+  top: 0;
+  white-space: nowrap;
+}
+
+.element .span-wrapper-5 {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 0;
+  letter-spacing: 0.86px;
+  line-height: normal;
+  position: absolute;
+  top: 60px;
+  white-space: nowrap;
+}
+
+.element .span-wrapper-6 {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 0;
+  letter-spacing: 0.86px;
+  line-height: normal;
+  position: absolute;
+  top: 120px;
+  white-space: nowrap;
+}
+
+.element .span-wrapper-7 {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 0;
+  letter-spacing: 0.86px;
+  line-height: normal;
+  position: absolute;
+  top: 180px;
+  white-space: nowrap;
+}
+
+.element .span-wrapper-8 {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 0;
+  letter-spacing: 0.86px;
+  line-height: normal;
+  position: absolute;
+  top: 240px;
+  white-space: nowrap;
+}
+
+.element .span-wrapper-9 {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 12px;
+  font-weight: 500;
+  left: 0;
+  letter-spacing: 0.86px;
+  line-height: normal;
+  position: absolute;
+  top: 300px;
+  white-space: nowrap;
+}
+
+.element .line {
+  height: 340px;
+  left: 45px;
+  position: absolute;
+  top: 0;
+  width: 1px;
+}
+
+.element .overlap {
+  height: 301px;
+  left: 46px;
+  position: absolute;
+  top: 39px;
+  width: 340px;
+}
+
+.element .line-2 {
+  height: 1px;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 340px;
+}
+
+.element .line-3 {
+  height: 1px;
+  left: 0;
+  position: absolute;
+  top: 120px;
+  width: 340px;
+}
+
+.element .line-4 {
+  height: 1px;
+  left: 0;
+  position: absolute;
+  top: 180px;
+  width: 340px;
+}
+
+.element .div-wrapper {
+  height: 61px;
+  left: 199px;
+  overflow: hidden;
+  position: absolute;
+  top: 150px;
+  width: 90px;
+}
+
+.element .overlap-group-3 {
+  background-color: #419436;
+  border-radius: 8px;
+  height: 54px;
+  left: -1px;
+  position: relative;
+  top: -1px;
+  width: 92px;
+}
+
+.element .span-wrapper-10 {
+  color: #cbe5f0;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  left: 30px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 8px;
+}
+
+.element .text-wrapper-5 {
+  color: #cbe5f0;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.element .span-wrapper-11 {
+  color: #cbe5f0;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  left: 32px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 30px;
+}
+
+.element .line-5 {
+  height: 1px;
+  left: 0;
+  position: absolute;
+  top: 240px;
+  width: 340px;
+}
+
+.element .line-6 {
+  height: 1px;
+  left: 0;
+  position: absolute;
+  top: 300px;
+  width: 340px;
+}
+
+.element .line-7 {
+  height: 175px;
+  left: 1px;
+  position: absolute;
+  top: 120px;
+  width: 190px;
+}
+
+.element .line-8 {
+  height: 301px;
+  left: 190px;
+  position: absolute;
+  top: 0;
+  width: 1px;
+}
+
+.element .line-9 {
+  height: 1px;
+  left: 47px;
+  position: absolute;
+  top: 22px;
+  width: 340px;
+}
+
+.element .navbar {
+  height: 32px;
+  left: 19px;
+  position: absolute;
+  top: 105px;
+  width: 386px;
+}
+
+.element .hour {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  left: 0;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  top: 8px;
+}
+
+.element .text-wrapper-6 {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.element .day {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  left: 56px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 8px;
+}
+
+.element .month {
+  background-color: #0b77a2;
+  border-radius: 8px;
+  height: 32px;
+  left: 100px;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 104px;
+}
+
+.element .month-2 {
+  color: #cbe5f0;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  left: 31px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 8px;
+}
+
+.element .element-month {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  left: 225px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 8px;
+}
+
+.element .yearly {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  left: 304px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 8px;
+}
+
+.element .all {
+  color: #574747;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  left: 367px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  text-align: right;
+  top: 8px;
+}
+
+.element .overlap-wrapper {
+  height: 42px;
+  left: 111px;
+  overflow: hidden;
+  position: absolute;
+  top: 513px;
+  width: 201px;
+}
+
+.element .month-wrapper {
+  background-color: #1a2bbd;
+  border-radius: 8px;
+  height: 42px;
+  left: -73px;
+  position: relative;
+  width: 274px;
+}
+
+.element .month-3 {
+  color: #cbe5f0;
+  font-family: "Abhaya Libre Medium-Medium", Helvetica;
+  font-size: 14px;
+  font-weight: 500;
+  left: 133px;
+  letter-spacing: 1px;
+  line-height: normal;
+  position: absolute;
+  text-align: center;
+  top: 13px;
+  width: 83px;
+}

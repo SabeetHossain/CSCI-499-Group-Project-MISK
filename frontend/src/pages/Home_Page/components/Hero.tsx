@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import { alpha } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
@@ -8,8 +9,11 @@ import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { useDispatch } from 'react-redux';
+// import { setData } from './Actions';
 
 export default function Hero() {
+  
   return (
     <Box
       id="hero"
@@ -87,7 +91,7 @@ export default function Hero() {
             />
 
 
-      <Link to='/Subscribe' style={{ textDecoration: 'none' }}>
+      <Link to='#' style={{ textDecoration: 'none' }}>
           <Button variant="contained" color="primary">
             Search for a Ticker
           </Button>
@@ -127,9 +131,7 @@ export default function Hero() {
                 : `0 0 24px 12px ${alpha('#033363', 0.2)}`,
           })}
         /> */}
-
       </Container>
     </Box>
-
   );
 }

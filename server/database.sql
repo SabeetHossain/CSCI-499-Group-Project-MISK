@@ -2,15 +2,13 @@
 CREATE TABLE
 	users (
 		user_id SERIAL PRIMARY KEY,
-		username VARCHAR(255) UNIQUE NOT NULL,
+		username VARCHAR(255) UNIQUE NOT NULL, --formerly description
 		password VARCHAR(255) NOT NULL DEFAULT '',
 		email VARCHAR(255) UNIQUE,
 		phone_number VARCHAR(15),
+		--role VARCHAR(50),
 		tickers VARCHAR(255)
 	);
-
-
-
 
 
 CREATE TYPE message_type_enum AS ENUM ('EMAIL', 'SMS');
@@ -25,7 +23,6 @@ INSERT INTO
 	settings (id, message_type)
 VALUES
 	(1, 'EMAIL');
-
 
 
 

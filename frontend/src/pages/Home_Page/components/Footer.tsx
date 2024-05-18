@@ -59,14 +59,13 @@ export default function Footer() {
             <Box sx={{ ml: '-15px' }}>
               <div></div>
             </Box>
-            {/* <Typography variant="body2" fontWeight={600} gutterBottom>
+            <Typography variant="body2" fontWeight={600} gutterBottom>
               Newsletter
             </Typography>
             <Typography variant="body2" color="text.secondary" mb={2}>
               Subscribe to our newsletter for weekly updates and promotions.
-            </Typography> */}
+            </Typography>
             <Stack direction="row" spacing={1} useFlexGap>
-              {/* <TextField
                 id="outlined-basic"
                 hiddenLabel
                 size="small"
@@ -78,8 +77,8 @@ export default function Footer() {
                   autocomplete: 'off',
                   ariaLabel: 'Enter your email address',
                 }}
-              /> */}
-              {/* <Button variant="contained" color="primary" sx={{ flexShrink: 0 }}>
+              />
+              <Button variant="contained" color="primary" sx={{ flexShrink: 0 }}>
                 Subscribe
               </Button> */}
             </Stack>
@@ -163,14 +162,13 @@ export default function Footer() {
         }}
       >
         <div>
-          {/* <Link color="text.secondary" href="#">
+          <Link color="text.secondary" href="#">
             Privacy Policy
-          </Link> */}
           <Typography display="inline" sx={{ mx: 0.5, opacity: 0.5 }}>
             &nbsp;•&nbsp;
           </Typography>
           <Link color="text.secondary" href="#">
-            Go to top of page
+            Terms of Service
           </Link>
           <Copyright />
         </div>
@@ -183,7 +181,7 @@ export default function Footer() {
             color: 'text.secondary',
           }}
         >
-          {/* <IconButton
+          <IconButton
             color="inherit"
             href="https://github.com/mui"
             aria-label="GitHub"
@@ -206,7 +204,7 @@ export default function Footer() {
             sx={{ alignSelf: 'center' }}
           >
             <LinkedInIcon />
-          </IconButton> */}
+          </IconButton>
         </Stack>
       </Box>
     </Container>

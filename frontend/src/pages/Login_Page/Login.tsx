@@ -87,18 +87,18 @@ const defaultTheme = createTheme();
 export default function SignInSide() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [token, setToken] = useState(''); //Declare token state and setToken setter function
-  const { setAuthentication } = useAuth(); //get setAuthentication function from useAuth hook
-  const navigate = useNavigate(); //use useNavigate hook to navigate programmatically
+  const [token, setToken] = useState(''); // Declare token state and setToken setter function
+  const { setAuthentication } = useAuth(); // Get setAuthentication function from useAuth hook
+  const navigate = useNavigate(); // Use useNavigate hook to navigate programmatically
 
 
 
   useEffect(() => {
-    //check if token exists in local storage
+    // Check if token exists in local storage
     const storedToken = localStorage.getItem('token');
     console.log('Token retrieved from localStorage:', storedToken);
     if (storedToken) {
-      // If the token exists, set it in the state
+      // If token exists, set it in the state
       setToken(storedToken);
     }
   }, []);
@@ -124,6 +124,7 @@ export default function SignInSide() {
         setToken(data.token);
         localStorage.setItem('token', data.token);
         console.log('Token stored in localStorage:', data.token);
+        //modify
         setAuthentication(data.authenticated, data.token); //store token and use verify instead
         navigate('/Profile');
       } else {
@@ -131,6 +132,7 @@ export default function SignInSide() {
       }
     } catch (error) {
       console.error('Error:', error);
+      console.log("uhhhhhhhhhhh error")
     }
   };
   return (
@@ -179,7 +181,7 @@ export default function SignInSide() {
                 autoComplete="email"
                 autoFocus
                 value={email}  // Make sure 'email' state is correctly bound to the input field
-                onChange={(e) => setEmail(e.target.value)}  //ensure onChange handler updates the 'email' state
+                onChange={(e) => setEmail(e.target.value)}  // Ensure onChange handler updates the 'email' state
               />
               <TextField
                 margin="normal"
@@ -215,24 +217,19 @@ export default function SignInSide() {
                     Forgot password?
                   </Link> */}
                 </Grid>
-
-
-
-
                 <Grid item>
                 <RouterLink to="/register">
                 {"Don't have an account? Sign Up"}
                 </RouterLink>
                 </Grid>
+                
               </Grid>
-
+              
               <Grid item>
                 <RouterLink to="/">
                 {"<-Go Back to Homepage"}
                 </RouterLink>
                 </Grid>
-
-
               <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>
