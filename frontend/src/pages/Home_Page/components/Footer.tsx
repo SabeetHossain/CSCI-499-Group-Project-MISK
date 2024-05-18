@@ -65,25 +65,23 @@ export default function Footer() {
             <Typography variant="body2" color="text.secondary" mb={2}>
               Subscribe to our newsletter for weekly updates and promotions.
             </Typography>
-            <Stack direction="row" spacing={1}>
-            <TextField
-              id="outlined-basic"
-              hiddenLabel
-              size="small"
-              variant="outlined"
-              fullWidth
-              aria-label="Enter your email address"
-              placeholder="Your email address"
-              inputProps={{
-                autocomplete: 'off',
-                ariaLabel: 'Enter your email address',
-              }}
-            />
-            <Button variant="contained" color="primary" sx={{ flexShrink: 0 }}>
-              Subscribe
-            </Button>
-          </Stack>
-
+            <Stack direction="row" spacing={1} useFlexGap>
+                id="outlined-basic"
+                hiddenLabel
+                size="small"
+                variant="outlined"
+                fullWidth
+                aria-label="Enter your email address"
+                placeholder="Your email address"
+                inputProps={{
+                  autocomplete: 'off',
+                  ariaLabel: 'Enter your email address',
+                }}
+              />
+              <Button variant="contained" color="primary" sx={{ flexShrink: 0 }}>
+                Subscribe
+              </Button> */}
+            </Stack>
           </Box>
         </Box>
         <Box
@@ -166,9 +164,8 @@ export default function Footer() {
         <div>
           <Link color="text.secondary" href="#">
             Privacy Policy
-          </Link>
           <Typography display="inline" sx={{ mx: 0.5, opacity: 0.5 }}>
-             • 
+            &nbsp;•&nbsp;
           </Typography>
           <Link color="text.secondary" href="#">
             Terms of Service
