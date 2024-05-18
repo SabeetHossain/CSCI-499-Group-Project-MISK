@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useState } from 'react';
 import { alpha } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -11,6 +12,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useDispatch } from 'react-redux';
 // import { setData } from './Actions';
+import { useState } from 'react';
 
 export default function Hero() {
   
@@ -90,6 +92,34 @@ export default function Hero() {
               }}
             />
 
+					<Stack
+						component="form"
+						direction={{ xs: 'column', sm: 'row' }}
+						alignSelf="center"
+						spacing={1}
+						useFlexGap
+						sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
+						onSubmit={(event) => {
+							event.preventDefault();
+							ticker && navigate('/ticker/' + ticker);
+						}}
+					>
+						<TextField
+							id="outlined-basic"
+							hiddenLabel
+							size="small"
+							variant="outlined"
+							aria-label="Enter a Ticker!"
+							placeholder="Your Ticker"
+							inputProps={{
+								autocomplete: 'off',
+								ariaLabel: 'Enter your email address',
+							}}
+							value={ticker}
+							onChange={({ target: { value } }) =>
+								setTicker(value)
+							}
+						/>
 
       <Link to='#' style={{ textDecoration: 'none' }}>
           <Button variant="contained" color="primary">
