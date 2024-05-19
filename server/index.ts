@@ -1,28 +1,26 @@
 // @ts-check
-
+import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import pool from './db';
-import dotenv from 'dotenv';
-import path from 'path';
+// import path from 'path';
 
 const bodyParser = require('body-parser');
-
 const app = express();
 const bcrypt = require('bcrypt'); //for password hashing. run "npm install bcrypt"
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const fs = require('fs');
-
 //const envPath = path.resolve('/home/capstone/CSCI-499-Group-Project-MISK/.env');
-const envPath = path.resolve('.env');
+// const envPath = path.resolve('.env');
+// dotenv.config({ path: envPath });
+dotenv.config();
 
-dotenv.config({ path: envPath });
+
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.json());
-
+app.use(bodyParser.json())
 //app.use(cookieParser());
 
 //------------------------------------------------ROUTES FOR LOGINS----------------------------------------------------------------//
@@ -35,117 +33,88 @@ const envFile = '.env';
 
 // Check if .env file exists
 if (!fs.existsSync(envFile)) {
-	fs.writeFileSync(envFile, '');
+  fs.writeFileSync(envFile, '');
 }
 
 // Append the JWT secret key to the .env file
 //fs.appendFileSync(envFile, `JWT_SECRET=${secretKey}\n`);
-
 // Load the environment variables from the .env file
 //dotenv.config();
-
 //console.log("JWT Secret Key:", secretKey);
 
 const jwtSecret = process.env.JWT_SECRET;
+
 //LOGIN ROUTE
+app.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body; // Change from username to email
+    console.log("Executing SQL query:", "SELECT * FROM users WHERE email = $1", [email]);
 
-app.post('/login', async (req, res) => {
-	try {
-		const { email, password } = req.body; // Change from username to email
-		console.log(
-			'Executing SQL query:',
-			'SELECT * FROM users WHERE email = $1',
-			[email],
-		);
-		// Check if email exists
-		const user = await pool.query('SELECT * FROM users WHERE email = $1', [
-			email,
-		]);
-		if (user.rows.length === 0) {
-			console.log('email doesnt exist');
-			return res
-				.status(401)
-				.json({ message: 'Invalid email or password' });
-		}
+    // Check if email exists
+    const user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
+    if (user.rows.length === 0) {
+      console.log("email doesnt exist");
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
 
-		// Verify password
-		const hashedPassword = user.rows[0].password;
-		const isPasswordValid = await bcrypt.compare(password, hashedPassword);
-		if (!isPasswordValid) {
-			console.log('wrong pw or email!');
-			return res
-				.status(401)
-				.json({ message: 'Invalid email or password' });
-		}
+    // Verify password
+    const hashedPassword = user.rows[0].password;
+    const isPasswordValid = await bcrypt.compare(password, hashedPassword);
+    if (!isPasswordValid) {
+      console.log("wrong pw or email!");
+      return res.status(401).json({ message: "Invalid email or password" });
+    }
 
-		// Generate JWT token
-		const token = jwt.sign(
-			{ userId: user.rows[0].user_id, email: user.rows[0].email },
-			jwtSecret,
-			{ expiresIn: 600 },
-		);
+    // Generate JWT token
+    const token = jwt.sign({ userId: user.rows[0].user_id }, jwtSecret, { expiresIn: 600 });
 
-		// Remove the password from the user object before sending it in the response
-		const { password: userPassword, ...userInfo } = user.rows[0];
+    // Remove the password from the user object before sending it in the response
+    const { password: userPassword, ...userInfo } = user.rows[0];
 
-		// Send response with token and user info
-		res.json({ authenticated: true, token, userInfo });
-	} catch (err) {
-		console.error((err as Error).message);
-		res.status(500).json({ message: 'Server error' });
-	}
+    // Send response with token and user info
+    res.json({ authenticated: true, token, userInfo });
+  } catch (err) {
+    console.error((err as Error).message);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 declare global {
-	namespace Express {
-		interface Request {
-			userID?: string; // Define userID property as optional, solves typescript error in verifyJWT function under req.userID
-		}
-	}
+  namespace Express {
+    interface Request {
+      userID?: string;
+    }
+  }
 }
-
-const verifyJWT = (
-	req: express.Request,
-	res: express.Response,
-	next: express.NextFunction,
-) => {
-	const token = req.body['token'];
-	console.log(token);
-	if (!token) {
-		return res
-			.status(200)
-			.json({ authenticated: false, message: 'No token provided' });
-	} else {
-		jwt.verify(token, jwtSecret, (err: Error | null, decoded: any) => {
-			if (err) {
-				return res
-					.status(200)
-					.json({
-						authenticated: false,
-						message: 'Failed to authenticate token',
-					});
-			} else {
-				// Store decoded user ID in request object for further processing
-				req.userID = decoded.userId;
-				next();
-			}
-		});
-	}
+const verifyJWT = (req: express.Request, res: express.Response, next: express.NextFunction)=> {
+  const token = req.body['token'];
+  console.log(token)
+  if (!token) {
+    return res.status(200).json({ authenticated: false, message: "No token provided" });
+  } else {
+    jwt.verify(token, jwtSecret, (err: Error | null, decoded: any) => {
+      if (err) {
+        return res.status(200).json({ authenticated: false, message: "Failed to authenticate token" });
+      } else {
+        //store decoded user ID in request object for further processing
+        req.userID = decoded.userId;
+        next();
+      }
+    });
+  }
 };
 
-app.post('/isUserAuth', verifyJWT, (req, res) => {
-	res.status(200).json({
-		authenticated: true,
-		message: 'this user is successfully authenticated.',
-	});
-	console.log('this user is successfully authenticated.');
+
+app.post('/isUserAuth', verifyJWT, (req,res) =>{
+
+  res.status(200).json({authenticated: true, message: "this user is successfully authenticated."});
+  console.log("this user is successfully authenticated.")
 });
 
 // Logout route
-app.post('/logout', (req, res) => {
-	//stub route for now
-	// Respond with a success message or any relevant response
-	res.json({ message: 'Logout successful' });
+app.post("/logout", (req, res) => {
+  //stub route for now
+  res.json({ message: "Logout successful" });
 });
 
 //-----------------------------------------------------ROUTES FOR USERNAMES/EMAILS/PASSWORDS------------------------------------------------------------//
@@ -167,7 +136,7 @@ app.post('/users', async (req: express.Request, res: express.Response) => {
 			'INSERT INTO users (username, password, email) VALUES($1, $2, $3) RETURNING *',
 			[username, hashedPassword, email],
 		);
-
+		console.log(newUser.rows[0]);
 		res.json(newUser.rows[0]);
 	} catch (err) {
 		console.error((err as Error).message);
@@ -175,7 +144,6 @@ app.post('/users', async (req: express.Request, res: express.Response) => {
 });
 
 //get all usernames
-
 app.get('/users', async (req: express.Request, res: express.Response) => {
 	try {
 		const allUsernames = await pool.query('SELECT * FROM users');
@@ -191,7 +159,6 @@ app.get('/users', async (req: express.Request, res: express.Response) => {
 });
 
 //get a username
-
 app.get(
 	'/users/:aUser',
 	async (req: express.Request, res: express.Response) => {
@@ -210,28 +177,26 @@ app.get(
 );
 
 //update a username
+// app.put(
+// 	'/users/:aUser',
+// 	async (req: express.Request, res: express.Response) => {
+// 		try {
+// 			const { aUser } = req.params;
+// 			const { username } = req.body;
+// 			const updateUsername = await pool.query(
+// 				'UPDATE users SET username = $1 WHERE user_id = $2',
+// 				[username, aUser],
+// 			);
 
-app.put(
-	'/users/:aUser',
-	async (req: express.Request, res: express.Response) => {
-		try {
-			const { aUser } = req.params;
-			const { username } = req.body;
-			const updateUsername = await pool.query(
-				'UPDATE users SET username = $1 WHERE user_id = $2',
-				[username, aUser],
-			);
-
-			res.json('Username was updated!');
-		} catch (err) {
-			console.error((err as Error).message);
-		}
-	},
-);
+// 			res.json('Username was updated!');
+// 		} catch (err) {
+// 			console.error((err as Error).message);
+// 		}
+// 	},
+// );
 
 //update an email
 //postman: http://localhost:4000/users/45/email
-
 app.put(
 	'/users/:userId/email',
 	async (req: express.Request, res: express.Response) => {
@@ -251,40 +216,7 @@ app.put(
 	},
 );
 
-//update tickers
-//postman: http://localhost:4000/users/45/tickers
-
-app.put(
-	'/users/:userId/ticker',
-	async (req: express.Request, res: express.Response) => {
-		try {
-			const { userId } = req.params;
-			const newTicker = req.body.tickers;
-
-			const user = await pool.query(
-				'SELECT tickers FROM users WHERE user_id = $1',
-				[userId],
-			);
-			const currentTickers = user.rows[0].tickers;
-
-			const updatedTickers = currentTickers
-				? `${currentTickers}, ${newTicker}`
-				: newTicker;
-
-			const updateUsername = await pool.query(
-				'UPDATE users SET tickers = $1 WHERE user_id = $2',
-				[updatedTickers, userId],
-			);
-
-			res.json('Ticker was updated!');
-		} catch (err) {
-			console.error((err as Error).message);
-		}
-	},
-);
-
 //delete a username
-
 app.delete(
 	'/users/:aUser',
 	async (req: express.Request, res: express.Response) => {
@@ -304,28 +236,10 @@ app.delete(
 
 //updating a users profile
 /*
-  Todo(Done):
-	1. rework logic
-	    -have a boolean that tracks whether a user based error was made
-		-first do the user error checks if username != "" ...(insert logic)
-		-after passing all the error checks if user based error == false, proceed to update any fields that != ""
-	2. fix incorrect password checking logic (skipped)
-	    -the idea was to make passwords unique, not allowing a user to use the same password as another,
-		but that doesnt really makes sense and also it seems like it will take a lot of time for me 
-		to implement and we dont have much time
-	3. send a status message (string) and a status value (string)
-	    -status value: success, failure, etc
-		-status messages: (I will also need booleans tracking which items were updated)
-		   -if multiple things were updated profile successfully updated.
-           -if one thing was updated, say that specific thing was updated
-	       -if a user error occured will say what the user did wrong
-	       -if a user successfully updates one thing but has user error on another, 
-		    will say what was updated successfully and what the user error was.
 		Design Decision: If the user has multiple errors, only whichever one was caught first will 
 		                 be sent to the user because as soon as a user based error is found 
 						 a res.status is returned.
 */
-
 /*new Todo: having checks for valid email strings and password strings */
 app.put('/users/:userId', async (req: express.Request, res: express.Response) =>{
 	try{
@@ -525,17 +439,14 @@ app.put('/users/:userId', async (req: express.Request, res: express.Response) =>
 
 //     const updatedTickers = currentTickers ? `${currentTickers}, ${newTicker}` : newTicker;
 
-//     const updateUsername = await pool.query("UPDATE users SET tickers = $1 WHERE username = $2",
-//     [updatedTickers, username]);
+    // const updateUsername = await pool.query("UPDATE users SET tickers = $1 WHERE username = $2",
+    // [updatedTickers, username]);
 
 //     res.json("Ticker was updated!")
 //   } catch (err) {
 //     console.error((err as Error).message);
 //   }
 // })
-
-
-
 
 app.put(
 	'/users/ticker/:description',
@@ -654,9 +565,7 @@ app.put('/users/email/:userId', async (req: express.Request, res:express.Respons
 	}
 );
 
-
 // get settings
-
 app.get('/settings', async (req: express.Request, res: express.Response) => {
 	try {
 		const result = await pool.query('SELECT * FROM settings LIMIT 1');
@@ -671,8 +580,8 @@ app.get('/settings', async (req: express.Request, res: express.Response) => {
 	}
 });
 
-// set settings
 
+// set settings
 app.post('/settings', async (req: express.Request, res: express.Response) => {
 	try {
 		const result = await pool.query(
@@ -690,6 +599,38 @@ app.post('/settings', async (req: express.Request, res: express.Response) => {
 	}
 });
 
+//update tickers
+//postman: http://localhost:4000/users/45/tickers
+
+app.put(
+	'/users/:userId/ticker',
+	async (req: express.Request, res: express.Response) => {
+		try {
+			const { userId } = req.params;
+			const newTicker = req.body.tickers;
+
+			const user = await pool.query(
+				'SELECT tickers FROM users WHERE user_id = $1',
+				[userId],
+			);
+			const currentTickers = user.rows[0].tickers;
+
+			const updatedTickers = currentTickers
+				? `${currentTickers}, ${newTicker}`
+				: newTicker;
+
+			const updateUsername = await pool.query(
+				'UPDATE users SET tickers = $1 WHERE user_id = $2',
+				[updatedTickers, userId],
+			);
+
+			res.json('Ticker was updated!');
+		} catch (err) {
+			console.error((err as Error).message);
+		}
+	},
+);
+
 //START THE SERVER//
 /*
 Install TypeScript globally if you haven't already done so:
@@ -705,6 +646,8 @@ or
 nodemon index.ts
 */
 
-app.listen(4000, () => {
-	console.log('Server is running on port 4000');
+const port = process.env.PORT || 4000;
+
+app.listen(port, () => {
+	console.log('Server is running on port '+port);
 });
