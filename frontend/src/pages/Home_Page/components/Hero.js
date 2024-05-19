@@ -95,7 +95,7 @@ export default function Hero() {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => navigate('/ticker/' + ticker)}
+              onClick={() => navigate('/subscribe/' + ticker)}
             >
               Search for a Ticker
             </Button>
