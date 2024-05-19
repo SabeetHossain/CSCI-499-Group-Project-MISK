@@ -778,12 +778,11 @@
 
 .element .overlap-wrapper {
   height: 42px;
+  left: 111px;
   overflow: hidden;
   position: absolute;
   top: 513px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  width: 201px;
 }
 
 .element .month-wrapper {

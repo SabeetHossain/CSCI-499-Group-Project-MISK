@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { alpha } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -9,11 +9,24 @@ import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useDispatch } from 'react-redux';
-// import { setData } from './Actions';
-
+// import { Element } from '../../../assets/React app layout/src/screens/Element';
 export default function Hero() {
+    const [textFieldValue, setTextFieldValue] = useState('');
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+      const value = e.target.value;
+      setTextFieldValue(value);
+    };
   
+    const handleSearch = () => {
+      // Navigate to Element component with input field data as a query parameter
+      navigate(`/Element?ticker=${textFieldValue}`);
+    };
+
+
+
+
   return (
     <Box
       id="hero"
@@ -79,11 +92,14 @@ export default function Hero() {
           >
             <TextField
               id="outlined-basic"
+              type='text'
               hiddenLabel
               size="small"
               variant="outlined"
               aria-label="Enter a Ticker!"
               placeholder="Your Ticker"
+              // value={textFieldValue}
+              onChange={handleChange}
               inputProps={{
                 autocomplete: 'off',
                 ariaLabel: 'Enter your email address',
@@ -91,8 +107,9 @@ export default function Hero() {
             />
 
 
-      <Link to='#' style={{ textDecoration: 'none' }}>
-          <Button variant="contained" color="primary">
+      {/* <Link to='/Subscribe' style={{ textDecoration: 'none' }}> */}
+      <Link to='/Element' style={{ textDecoration: 'none' }}>
+          <Button variant="contained" color="primary"  onClick={handleSearch}>
             Search for a Ticker
           </Button>
         </Link>
@@ -107,7 +124,8 @@ export default function Hero() {
     </Stack>
 
 
-        {/* <Box
+{/* 
+        <Box
           id="image"
           sx={(theme) => ({
             mt: { xs: 8, sm: 10 },
