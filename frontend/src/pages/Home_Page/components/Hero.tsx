@@ -87,7 +87,7 @@ export default function Hero() {
 						sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
 						onSubmit={(event) => {
 							event.preventDefault();
-							ticker && navigate('/subscribe/' + ticker);
+							ticker && navigate('/ticker/' + ticker);
 						}}
 					>
 						<TextField
