@@ -38,7 +38,7 @@ token = "e366dfb2d40d714341d8f23d3845f45a6cafece8"
 
 ## Notes
 
-- The gmail account is set to send emails from my email account, mshvorin@gmail.com, and until the ticker subscription is implimented, unless you add a row with your email to the users table, you will be unable to recieve any emails (as you are not subscribed to them), but there is output in the console for emails being sent out.
+- The gmail account is set to send emails from my email account, mshvorin@gmail.com, and to recieve emails, you will need to create an account with your email address, then subscribe to a good amount of tickers such as AAPL, MSFT, TSLA, and other popular companies in order to get live reports after running app.py and starting the flask app. (You will know once you start getting pings and pongs) Otherwise, you can subscribe to a ticker like TSLA, and in the bottom of alpaca_client.py, you can uncomment ```python # asyncio.run(tiingoML("TSLA",5)) ```and run the alpaca_client.py file.
 - When connected, you should be able to see that the flask app has been ran in the console. You will see something similar to `(19168) wsgi starting up on http://127.0.0.1:5000/`, and should click on the link to connect to the webhook.
 
 
