@@ -92,11 +92,17 @@ export default function Hero() {
               onChange={({ target: { value } }) => setTicker(value)}
             />
 
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => navigate('/ticker/' + ticker)}
-            >
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  if (ticker !== "") {
+                    navigate('/ticker/' + ticker)
+                  } else {
+                    alert("Ticker is empty. Please enter a value.");
+                  }
+                }}
+              >
               Search for a Ticker
             </Button>
           </Stack>
