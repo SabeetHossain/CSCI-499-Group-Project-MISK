@@ -14,7 +14,6 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ToggleColorMode from '../pages/Home_Page/components/ToggleColorMode';
 import { useAuth } from '../useAuth';
 
-
 const logoStyle = {
   width: '140px',
   height: 'auto',
@@ -26,14 +25,13 @@ interface AppAppBarProps {
   toggleColorMode: () => void;
 }
 
+//copy and paste of appappbar from the home components with some slight modification
 function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
   const [open, setOpen] = React.useState(false);
-
   const navigate = useNavigate(); // Get the navigate function from useNavigate hook
   const { isLoggedIn } = useAuth(); // Get the isLoggedIn state from useAuth hook
 
   const handleLogout = () => {
-    
     localStorage.removeItem("token");
     window.location.reload();
     // Call the logout route on the client side
@@ -49,7 +47,6 @@ function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
         // Navigate to the login page or any other desired page after logout
         navigate('/');
         //window.location.reload();
-
       } else {
         // Handle logout error
         console.error('Logout failed');
@@ -79,12 +76,12 @@ function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
     }
   };
 
-  function linkTo(pagename:string){
+  //when a navbar tab like profile or subscribe is clicked, links to the respective page. subscribe functionality is on the landing page so subscribe redirects to the landing page. 
+  //the misk logo also leads to the landing page
+  function linkTo(pagename:string):void{
     navigate(`/${pagename}`);
-
   } 
  
-
   return (
     <div>
       <AppBar
@@ -166,32 +163,26 @@ function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
                 alignItems: 'center',
               }}
             >
-
-              <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
-
-              {isLoggedIn && 
+            <ToggleColorMode mode={mode} toggleColorMode={toggleColorMode} />
+            {isLoggedIn && 
                 <Button color="primary" variant="text" size="small" onClick={handleLogout}>
                   Logout
                 </Button>
-              }
-
-              {!isLoggedIn && 
+            }
+            {!isLoggedIn && 
                 <Link to="/login" style={{ textDecoration: 'none' }}>
                   <Button color="primary" variant="text" size="small">
                     Sign in
                   </Button>
                 </Link>
-              }
-
-
-              {!isLoggedIn && 
+            }
+            {!isLoggedIn && 
                 <Link to="/register" style={{ textDecoration: 'none' }}>
                   <Button color="primary" variant="contained" size="small">
                     Sign up
                   </Button>
                 </Link>
               }
-
               </Box>
             <Box sx={{ display: { sm: '', md: 'none' } }}>
               <Button
@@ -245,13 +236,8 @@ function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
                 </Button>
               }
               </MenuItem>
-
-
-
-                  <MenuItem>
-
-
-                  {!isLoggedIn && 
+              <MenuItem>
+              {!isLoggedIn && 
                     <Link to="/register" style={{ textDecoration: 'none', width: '100%' }}>
                       <Button color="primary" variant="contained" fullWidth>
                         Sign up
@@ -259,8 +245,6 @@ function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
                     </Link>
                     }
                   </MenuItem>
-
-                  
                   <MenuItem>
                   {!isLoggedIn && 
                     <Link to="/login" style={{ textDecoration: 'none', width: '100%' }}>
@@ -269,9 +253,7 @@ function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
                       </Button>
                     </Link>
                     }
-                  </MenuItem>
-                  
-                  
+                  </MenuItem> 
                 </Box>
               </Drawer>
             </Box>
