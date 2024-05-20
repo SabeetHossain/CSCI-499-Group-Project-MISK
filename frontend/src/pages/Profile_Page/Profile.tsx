@@ -276,8 +276,10 @@ function Profile(){
         if (response.ok) {
           //before the account would immediately log out or whatever since the token gets destroyed and the toast wouldnt even show. now it just stays on the profile page
           //and errors will occur unless you go back to the landing page by clicking the misk logo or going to localhost:3000/
-          showToast('success', 'Account successfully deleted');
+          // showToast('success', 'Account successfully deleted');
           localStorage.removeItem("token");
+          //quick fix to the issues above showtoast comment. i'd like to have done a better fix
+          navigate('/');
         }
         else{
           console.error('Error deleting user:');
