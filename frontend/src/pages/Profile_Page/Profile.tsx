@@ -28,7 +28,6 @@ import { ToastContainer, toast } from 'react-toastify';
 
 /*
 Todo:
-  -add more documentation
   -delete account (change it so that pressing delete opens a dialog box, that will ask if you are sure. if yes delete, if no exit.)
   -the logged in use effect might need to be changed cause its always active.
 */
@@ -55,6 +54,7 @@ function Profile(){
   const LPtheme = createTheme(getLPTheme(mode));
   const defaultTheme = createTheme({ palette: { mode } });
 
+  //this is for the light/dark mode
   function toggleColorMode():void{
     setMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
   };
@@ -69,6 +69,7 @@ function Profile(){
     phonesubbed: boolean;
     emailsubbed: boolean;
   }
+
   /*
     Phone notification implementation might not be functional. all this will do is change the value between
     true and false in our database. Matt has contacted the company that we are using for the SMS implementation
@@ -77,10 +78,10 @@ function Profile(){
   async function updatePhoneNotifs():Promise<void>{
     try{
       const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
-      const decodedToken= jwtDecode(token as string) as JwtPayload;
-      const userId = parseInt(decodedToken.userId);
+      const decodedToken= jwtDecode(token as string) as JwtPayload; //decodes the token so i can get userId and use it to make calls to the backend
+      const userId:number = parseInt(decodedToken.userId);
       //because a useeffect is always setting phoneSubscribed each time it change I will need to have the backend change it first.
-      //than if(response is ok setPhoneSubscribed to the opposite of what it was.)
+      //then if(response is ok setPhoneSubscribed to the opposite of what it was.)
       const body = {phoneSubscribed};
         console.log("user id in update phone")
         console.log(userId)
@@ -100,14 +101,18 @@ function Profile(){
             setPhoneSubscribed(true);
           }
           const data = await response.json();
+          //console.log for testing purposes. applies to pretty much anywhere I use it.
           console.log(response.json);
           console.log('contents of data.message: '+data.message);
           console.log('contents of value: '+ data.value);
+          //all my toasts use messageData to put a custom message, and valueData for the error type so I can show different error types.
+          // messageData and valueData might be named differently in other functions though.
           const messageData = data.message;
           const valueData = data.value;
           showToast(messageData, valueData);
         }
-        // else{
+        // dont know what i was planning to do with this 
+        //else{
         //   const data = await response.json();
         //   console.log('contents of data.message: '+data.message);
         //   console.log('contents of value: '+ data.value);
@@ -118,15 +123,17 @@ function Profile(){
         // }
       }
        catch (err){
+        //server side error, not user error, applies to all of the catches.
         console.error((err as Error).message);
       }
     };
 
+    //this function uses the same logic as the one for updating phone numbers
     async function updateEmailNotifs():Promise<void>{
       try{
-        const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+        const token = localStorage.getItem('token'); 
         const decodedToken= jwtDecode(token as string) as JwtPayload;
-        const userId = parseInt(decodedToken.userId);
+        const userId:number = parseInt(decodedToken.userId);
         const body = {emailSubscribed};
           console.log("user id in update phone")
           console.log(userId)
@@ -168,7 +175,7 @@ function Profile(){
         }
       };
   
-
+  //when a form is submitted or when the cancel button is pressed, clears the textfields.
   function clearFields():void {
     setUsername('');
     setCurrentPassword('');
@@ -176,6 +183,7 @@ function Profile(){
     setEmail('');
   };
 
+  //pass the messagedata, and statusvalue to this function to show the appropriate toast. they're are many options from the toastify library but only these ones are necessary.
   function showToast(data:string, value:string):void
   {
     if(value === 'success')
@@ -217,7 +225,7 @@ function Profile(){
       try {
         const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
         const decodedToken= jwtDecode(token as string) as JwtPayload;
-        const userId = parseInt(decodedToken.userId);
+        const userId:number = parseInt(decodedToken.userId);
         const response = await fetch(`http://localhost:4000/users/${userId}`, {
           method: "GET",
           headers: {
@@ -245,9 +253,7 @@ function Profile(){
     fetchUserInfo();
   },[username, email, currentPassword, newPassword, phoneSubscribed, emailSubscribed]); 
 
-
-
-
+//useEffect for the authentication check. always running.
   useEffect(() => {
     async function checkLoggedIn():Promise<void> {
       await loggedInCheck();
@@ -255,10 +261,11 @@ function Profile(){
     checkLoggedIn();
   })
 
+  //deletes user when you click delete button
   async function handleDelete():Promise<void> {
     const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
       const decodedToken= jwtDecode(token as string) as JwtPayload;
-      const userId = parseInt(decodedToken.userId);
+      const userId:number = parseInt(decodedToken.userId);
       try{
         const response = await fetch(`http://localhost:4000/users/${userId}`, {
           method: "DELETE",
@@ -267,6 +274,8 @@ function Profile(){
           },
         });
         if (response.ok) {
+          //before the account would immediately log out or whatever since the token gets destroyed and the toast wouldnt even show. now it just stays on the profile page
+          //and errors will occur unless you go back to the landing page by clicking the misk logo or going to localhost:3000/
           showToast('success', 'Account successfully deleted');
           localStorage.removeItem("token");
         }
@@ -277,12 +286,10 @@ function Profile(){
       }catch(error) {
         console.error('Error fetching user info:', error);
       }
-    
-
-
   }
 
-  const handleSubmitChanges = async (event: React.FormEvent<HTMLFormElement>) => {
+  //form submission. updates profile with handling of some user error cases.
+  const handleSubmitChanges = async (event: React.FormEvent<HTMLFormElement>):Promise<void> => {
     event.preventDefault();
     try {
       const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
@@ -299,16 +306,15 @@ function Profile(){
       });
 
       if (response.ok) {
-        
         const data = await response.json();
         // console.log(response.json);
         console.log('contents of data.message: '+data.message);
         console.log('contents of value: '+ data.value);
         console.log("profile update Response:", data);
+        //a new token is created when credentials are changed, so now tokens state needs to be set to the new value. and the token in storage needs to be updated.
         setToken(data.token);
         localStorage.setItem('token', data.token);
         console.log('Token stored in localStorage:', data.token);
-        //modify
         setAuthentication(data.authenticated, data.token); //store token and use verify instead
         const messageData = data.message;
         const valueData = data.value;
@@ -316,6 +322,7 @@ function Profile(){
       }
       else{
         const data = await response.json();
+        //if there is a user error shows a toast saying what they did wrong. specifically the first error caught on the server side if user has multiple
         console.log('contents of data.message: '+data.message);
         console.log('contents of value: '+ data.value);
         console.error('Failed to update:', data.message);
@@ -323,15 +330,19 @@ function Profile(){
         const valueData = data.value;
         showToast(messageData, valueData);
       }
+      //after form submitted, clear fields
       clearFields();
     }
      catch (err){
       console.error((err as Error).message);
     }
   };
-
-
-  
+/*
+   about whats being returned:
+   the navbar
+   toastcontainer with css to position it in the right place
+   a bunch of grids and boxes for the different sections of the page with buttons that make calls to some functions.
+*/
   return (
     <ThemeProvider theme={showCustomTheme ? LPtheme : defaultTheme}>
       <CssBaseline/>
@@ -490,8 +501,6 @@ function Profile(){
             Delete
           </Button>
       </Grid>
-
-    
     </Grid>
   </ThemeProvider>
 );
