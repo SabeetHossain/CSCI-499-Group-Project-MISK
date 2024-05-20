@@ -1,33 +1,29 @@
 // @ts-check
-
+import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import pool from './db';
-import dotenv from 'dotenv';
-import path from 'path';
+// import path from 'path';
 
 const bodyParser = require('body-parser');
-
 const app = express();
 const bcrypt = require('bcrypt'); //for password hashing. run "npm install bcrypt"
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const fs = require('fs');
-
 //const envPath = path.resolve('/home/capstone/CSCI-499-Group-Project-MISK/.env');
-const envPath = path.resolve('.env');
+// const envPath = path.resolve('.env');
+// dotenv.config({ path: envPath });
+dotenv.config();
 
-dotenv.config({ path: envPath });
+
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json())
-
 //app.use(cookieParser());
 
 //------------------------------------------------ROUTES FOR LOGINS----------------------------------------------------------------//
-
-
 
 // Generate a random JWT secret key
 const secretKey = crypto.randomBytes(32).toString('hex');
@@ -42,20 +38,18 @@ if (!fs.existsSync(envFile)) {
 
 // Append the JWT secret key to the .env file
 //fs.appendFileSync(envFile, `JWT_SECRET=${secretKey}\n`);
-
 // Load the environment variables from the .env file
 //dotenv.config();
-
 //console.log("JWT Secret Key:", secretKey);
 
 const jwtSecret = process.env.JWT_SECRET;
+
 //LOGIN ROUTE
-
-
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body; // Change from username to email
     console.log("Executing SQL query:", "SELECT * FROM users WHERE email = $1", [email]);
+
     // Check if email exists
     const user = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
     if (user.rows.length === 0) {
@@ -79,20 +73,11 @@ app.post("/login", async (req, res) => {
 
     // Send response with token and user info
     res.json({ authenticated: true, token, userInfo });
-
   } catch (err) {
     console.error((err as Error).message);
     res.status(500).json({ message: "Server error" });
   }
 });
-
-
-
-
-
-
-
-
 
 declare global {
   namespace Express {
@@ -101,7 +86,6 @@ declare global {
     }
   }
 }
-
 const verifyJWT = (req: express.Request, res: express.Response, next: express.NextFunction)=> {
   const token = req.body['token'];
   console.log(token)
@@ -127,28 +111,17 @@ app.post('/isUserAuth', verifyJWT, (req,res) =>{
   console.log("this user is successfully authenticated.")
 });
 
-
-
-
-
-
-
-
 // Logout route
 app.post("/logout", (req, res) => {
   //stub route for now
   res.json({ message: "Logout successful" });
 });
 
-
-
-
 //-----------------------------------------------------ROUTES FOR USERNAMES/EMAILS/PASSWORDS------------------------------------------------------------//
 
 //-----------------------------------------------------ROUTES FOR USER INFORMATION-----------------------------------------------------//
 
 //-----------------------------------------------------ROUTES FOR USERNAMES------------------------------------------------------------//
-
 
 //Create a new user (with username and password)
 
@@ -163,16 +136,14 @@ app.post('/users', async (req: express.Request, res: express.Response) => {
 			'INSERT INTO users (username, password, email) VALUES($1, $2, $3) RETURNING *',
 			[username, hashedPassword, email],
 		);
-
+		console.log(newUser.rows[0]);
 		res.json(newUser.rows[0]);
 	} catch (err) {
 		console.error((err as Error).message);
 	}
 });
 
-
 //get all usernames
-
 app.get('/users', async (req: express.Request, res: express.Response) => {
 	try {
 		const allUsernames = await pool.query('SELECT * FROM users');
@@ -188,7 +159,6 @@ app.get('/users', async (req: express.Request, res: express.Response) => {
 });
 
 //get a username
-
 app.get(
 	'/users/:aUser',
 	async (req: express.Request, res: express.Response) => {
@@ -207,7 +177,6 @@ app.get(
 );
 
 //update a username
-
 // app.put(
 // 	'/users/:aUser',
 // 	async (req: express.Request, res: express.Response) => {
@@ -228,7 +197,6 @@ app.get(
 
 //update an email
 //postman: http://localhost:4000/users/45/email
-
 app.put(
 	'/users/:userId/email',
 	async (req: express.Request, res: express.Response) => {
@@ -249,7 +217,6 @@ app.put(
 );
 
 //delete a username
-
 app.delete(
 	'/users/:aUser',
 	async (req: express.Request, res: express.Response) => {
@@ -269,28 +236,10 @@ app.delete(
 
 //updating a users profile
 /*
-  Todo(Done):
-	1. rework logic
-	    -have a boolean that tracks whether a user based error was made
-		-first do the user error checks if username != "" ...(insert logic)
-		-after passing all the error checks if user based error == false, proceed to update any fields that != ""
-	2. fix incorrect password checking logic (skipped)
-	    -the idea was to make passwords unique, not allowing a user to use the same password as another,
-		but that doesnt really makes sense and also it seems like it will take a lot of time for me 
-		to implement and we dont have much time
-	3. send a status message (string) and a status value (string)
-	    -status value: success, failure, etc
-		-status messages: (I will also need booleans tracking which items were updated)
-		   -if multiple things were updated profile successfully updated.
-           -if one thing was updated, say that specific thing was updated
-	       -if a user error occured will say what the user did wrong
-	       -if a user successfully updates one thing but has user error on another, 
-		    will say what was updated successfully and what the user error was.
 		Design Decision: If the user has multiple errors, only whichever one was caught first will 
 		                 be sent to the user because as soon as a user based error is found 
 						 a res.status is returned.
 */
-
 /*new Todo: having checks for valid email strings and password strings */
 app.put('/users/:userId', async (req: express.Request, res: express.Response) =>{
 	try{
@@ -479,7 +428,6 @@ app.put('/users/:userId', async (req: express.Request, res: express.Response) =>
 
 //-----------------------------------------------------ROUTES FOR TICKERS------------------------------------------------------------//
 
-
 //old code for updating a ticker
 // app.put("/users/ticker/:username", async(req: express.Request, res: express.Response) =>{
 //   try {
@@ -491,17 +439,14 @@ app.put('/users/:userId', async (req: express.Request, res: express.Response) =>
 
 //     const updatedTickers = currentTickers ? `${currentTickers}, ${newTicker}` : newTicker;
 
-//     const updateUsername = await pool.query("UPDATE users SET tickers = $1 WHERE username = $2",
-//     [updatedTickers, username]);
+    // const updateUsername = await pool.query("UPDATE users SET tickers = $1 WHERE username = $2",
+    // [updatedTickers, username]);
 
 //     res.json("Ticker was updated!")
 //   } catch (err) {
 //     console.error((err as Error).message);
 //   }
 // })
-
-
-
 
 app.put(
 	'/users/ticker/:description',
@@ -532,8 +477,95 @@ app.put(
 	},
 );
 
-// get settings
+app.put('/users/phone/:userId', async (req: express.Request, res:express.Response) => {
+	try{
+		let statusValue:string = 'placeholder';
+		let statusMessage:string = 'placeholder';
+		console.log('this is req.params: ' + req.params);
+		console.log('this is req.body: '+ req.body);
 
+		const { userId } = req.params;
+		const user = await pool.query(
+			'SELECT * FROM users WHERE user_id = $1',
+			[userId],
+		);
+		const phoneSubbed = await pool.query(
+			'SELECT phonesubbed FROM users WHERE user_id = $1',
+			[userId],
+		);
+		console.log('phonesubbed: '+phoneSubbed.rows[0].phonesubbed)
+		let phoneSubscribedBody:boolean = req.body.phoneSubscribed;
+		console.log('phone notifications are enabled: ' + phoneSubscribedBody);
+
+		if(phoneSubscribedBody === true)
+        {
+			phoneSubscribedBody = false;
+			statusMessage = 'You will no longer be getting phone notifications';
+			statusValue = 'info';
+        }
+		else
+		{
+			phoneSubscribedBody = true;
+			statusMessage = 'You will now be getting phone notifications!';
+			statusValue = 'info';
+		}
+		const updatePhoneSubbed = await pool.query(
+			'UPDATE users SET phonesubbed = $1 WHERE user_id = $2',
+			[phoneSubscribedBody, userId],
+		);
+		res.json({message: statusMessage, value: statusValue});
+	}
+	catch (err) {
+		console.error((err as Error).message);
+	}
+	}
+);
+
+app.put('/users/email/:userId', async (req: express.Request, res:express.Response) => {
+	try{
+		let statusValue:string = 'placeholder';
+		let statusMessage:string = 'placeholder';
+		console.log('this is req.params: ' + req.params);
+		console.log('this is req.body: '+ req.body);
+
+		const { userId } = req.params;
+		const user = await pool.query(
+			'SELECT * FROM users WHERE user_id = $1',
+			[userId],
+		);
+		const emailSubbed = await pool.query(
+			'SELECT emailsubbed FROM users WHERE user_id = $1',
+			[userId],
+		);
+		console.log('emailsubbed: '+emailSubbed.rows[0].emailsubbed)
+		let emailSubscribedBody:boolean = req.body.emailSubscribed;
+		console.log('email notifications are enabled: ' + emailSubscribedBody);
+
+		if(emailSubscribedBody === true)
+        {
+			emailSubscribedBody = false;
+			statusMessage = 'You will no longer be getting email notifications';
+			statusValue = 'info';
+        }
+		else
+		{
+			emailSubscribedBody = true;
+			statusMessage = 'You will now be getting email notifications!';
+			statusValue = 'info';
+		}
+		const updateEmailSubbed = await pool.query(
+			'UPDATE users SET emailsubbed = $1 WHERE user_id = $2',
+			[emailSubscribedBody, userId],
+		);
+		res.json({message: statusMessage, value: statusValue});
+	}
+	catch (err) {
+		console.error((err as Error).message);
+	}
+	}
+);
+
+// get settings
 app.get('/settings', async (req: express.Request, res: express.Response) => {
 	try {
 		const result = await pool.query('SELECT * FROM settings LIMIT 1');
@@ -550,7 +582,6 @@ app.get('/settings', async (req: express.Request, res: express.Response) => {
 
 
 // set settings
-
 app.post('/settings', async (req: express.Request, res: express.Response) => {
 	try {
 		const result = await pool.query(
@@ -568,6 +599,38 @@ app.post('/settings', async (req: express.Request, res: express.Response) => {
 	}
 });
 
+//update tickers
+//postman: http://localhost:4000/users/45/tickers
+
+app.put(
+	'/users/:userId/ticker',
+	async (req: express.Request, res: express.Response) => {
+		try {
+			const { userId } = req.params;
+			const newTicker = req.body.tickers;
+
+			const user = await pool.query(
+				'SELECT tickers FROM users WHERE user_id = $1',
+				[userId],
+			);
+			const currentTickers = user.rows[0].tickers;
+
+			const updatedTickers = currentTickers
+				? `${currentTickers}, ${newTicker}`
+				: newTicker;
+
+			const updateUsername = await pool.query(
+				'UPDATE users SET tickers = $1 WHERE user_id = $2',
+				[updatedTickers, userId],
+			);
+
+			res.json('Ticker was updated!');
+		} catch (err) {
+			console.error((err as Error).message);
+		}
+	},
+);
+
 //START THE SERVER//
 /*
 Install TypeScript globally if you haven't already done so:
@@ -583,6 +646,8 @@ or
 nodemon index.ts
 */
 
-app.listen(4000, () => {
-	console.log('Server is running on port 4000');
+const port = process.env.PORT || 4000;
+
+app.listen(port, () => {
+	console.log('Server is running on port '+port);
 });

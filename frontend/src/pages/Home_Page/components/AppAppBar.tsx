@@ -16,10 +16,10 @@ import { useAuth } from "../../../useAuth"; // Import useAuth hook
 
 
 const logoStyle = {
-  width: '140px',
+  width: '80px',
   height: 'auto',
-  cursor: 'pointer',
 };
+
 
 interface AppAppBarProps {
   mode: PaletteMode;
@@ -126,7 +126,7 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
             >
               <img
                 src={
-                  'https://assets-global.website-files.com/61ed56ae9da9fd7e0ef0a967/61f12e6faf73568658154dae_SitemarkDefault.svg'
+                "https://i.imgur.com/RgMvco0.png"
                 }
                 style={logoStyle}
                 alt="logo of MISK"

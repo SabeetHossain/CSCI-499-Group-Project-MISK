@@ -3,7 +3,7 @@ import { useAuth } from "../../useAuth";
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../global_components/Navbar';
-import { jwtDecode } from 'jwt-decode';
+// import { jwtDecode } from 'jwt-decode';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import getLPTheme from '../Home_Page/getLPTheme';
 import { PaletteMode } from '@mui/material';

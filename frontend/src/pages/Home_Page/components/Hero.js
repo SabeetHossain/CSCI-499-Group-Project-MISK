@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { alpha } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -8,8 +8,12 @@ import Container from '@mui/material/Container';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 
 export default function Hero() {
+  const navigate = useNavigate();
+  const [ticker, setTicker] = useState('');
+
   return (
     <Box
       id="hero"
@@ -43,7 +47,7 @@ export default function Hero() {
               fontSize: 'clamp(3.5rem, 10vw, 4rem)',
             }}
           >
-            Begin Your&nbsp;
+            Begin Your 
             <Typography
               component="span"
               variant="h1"
@@ -84,25 +88,34 @@ export default function Hero() {
                 autocomplete: 'off',
                 ariaLabel: 'Enter your email address',
               }}
+              value={ticker}
+              onChange={({ target: { value } }) => setTicker(value)}
             />
 
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => {
+                  if (ticker !== "") {
+                    navigate('/ticker/' + ticker)
+                  } else {
+                    alert("Ticker is empty. Please enter a value.");
+                  }
+                }}
+              >
+              Search for a Ticker
+            </Button>
+          </Stack>
+          <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
+            By clicking "Search for a Ticker" you agree to our 
+            <Link to="#" color="primary">
+              Terms & Conditions
+            </Link>
+            .
+          </Typography>
+        </Stack>
 
-      <Link to='/Subscribe' style={{ textDecoration: 'none' }}>
-          <Button variant="contained" color="primary">
-            Search for a Ticker
-          </Button>
-        </Link>
-      </Stack>
-      <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
-        By clicking &quot;Search for a Ticker&quot; you agree to our&nbsp;
-        <Link to="#" color="primary">
-          Terms & Conditions
-        </Link>
-        .
-      </Typography>
-    </Stack>
-
-
+{/* 
         <Box
           id="image"
           sx={(theme) => ({
@@ -126,7 +139,10 @@ export default function Hero() {
                 ? `0 0 12px 8px ${alpha('#9CCCFC', 0.2)}`
                 : `0 0 24px 12px ${alpha('#033363', 0.2)}`,
           })}
-        />
+        /> */}
+
+
+
       </Container>
     </Box>
   );

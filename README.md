@@ -1,61 +1,6 @@
-These are the instructions to download the MISK project and run it on a local machine
+# Final Project Build Instructions
 
-## Getting Started
 
-To get started with the project, follow these instructions to set up the database and tables required for storing user data and news summaries.
-
-### Creating the Database
-
-First, you need to create the database. Open your postgres database management tool `psql` and execute the following SQL command:
-
-```postgresql
-CREATE DATABASE newsData;
-```
-
-### Creating Tables
-
-After creating the database, you need to create tables to store user information and news summaries. Execute the following SQL commands to create these tables:
-
-#### Settings Table
-
-```postgresql
-CREATE TYPE message_type_enum AS ENUM ('EMAIL', 'SMS');
-
-CREATE TABLE
-	settings (
-		id SERIAL PRIMARY KEY,
-		message_type message_type_enum NOT NULL DEFAULT 'EMAIL'
-	);
-
-INSERT INTO
-	settings (id, message_type)
-VALUES
-	(1, 'EMAIL');
-```
-
-#### Users Table
-
-```postgresql
-CREATE TABLE users (
-id SERIAL PRIMARY KEY,
-username VARCHAR(255) UNIQUE NOT NULL,
-password TEXT NOT NULL,
-email VARCHAR(255) UNIQUE NOT NULL,
-tickers TEXT[]
-);
-```
-
-#### News Summaries Table
-
-```postgresql
-CREATE TABLE news_summaries (
-id SERIAL PRIMARY KEY,
-summary TEXT,
-tickers TEXT[],
-sentiment VARCHAR(10),
-level INTEGER
-);
-```
 
 ## Alpaca Client Changes
 
@@ -99,79 +44,58 @@ gmailPass = "xeur affl zdkr yjwg" # Gmail application-specific password
 - The gmail account is set to send emails from my email account, mshvorin@gmail.com, and until the ticker subscription is implimented, unless you add a row with your email to the users table, you will be unable to recieve any emails (as you are not subscribed to them), but there is output in the console for emails being sent out.
 - When connected, you should be able to see that the flask app has been ran in the console. You will see something similar to `(19168) wsgi starting up on http://127.0.0.1:5000/`, and should click on the link to connect to the webhook.
 
-# Test PERN Stack Application
 
-Make sure you have Node.js installed before running these commands.
+## Server Setup
 
-## Setting Up the Database
-
-## Step 1: Create Database
-
-1. **Connect to PostgreSQL:**
-
-sudo su postgres, psql
-
-2. **Create Database:**
-
-CREATE DATABASE misk_info;
-
-## Step 2: Create Table
-
-1. **Connect to the newly created database:**
-
-CREATE TABLE users (
-user_id SERIAL PRIMARY KEY,
-description VARCHAR(255)
-);
-
-This will create a PostgreSQL database named `misk_info` with a table named `users`, containing columns `user_id` and `description`.
-
-## Server
-
-1. **Install TypeScript globally if you haven't already done so:**
-
-npm install -g typescript
-
-2. **Install dependencies:**
-
-cd server
-
-npm install
-
-3. **Run the server:**
-
-ts-node index.ts
-
-## Frontend
-
-1. **Install dependencies:**
-
-cd frontend
-
-npm install
-
-2. **Run the frontend server:**
-
-nodemon index.js
-
-This will launch the web application on localhost:3000.
-
-## Adding Your Username to the Database
-
-1. **Access the web application:**
-   Navigate to localhost:3000 in your web browser.
-
-2. **Sign Up:**
-   Click the "Sign Up" button and input your desired username.
+Make sure you have Node.js installed before running the following commands.
 
 
-#### Members
+To run the server, navigate to the “server” directory and follow these steps:
 
-* **Matthew Shvorin**
-  * Worked on the Python Flask Backend (Connecting to webhook, processing data, emails, etc.)
-* **Ian Clarke**
-  * Created server folder and added "users" database in file database.sql. Added files db.ts and index.ts for creating, deleting, and editing users. Worked on Register.tsx file to ensure that server side API was being used correctly
-* **Sabeet Hossain**
-  * Designed initial skeleton for the react app including some basic frontend. helped with debugging when usernames weren't being added to the database correctly.
-* **Kevin Wander**
-  * Working on ticker subscription feature, helped collaborate on the frontend, and created the presentations.
+1. **Install ts-node**:
+   - Ensure ts-node is installed:
+     ```sh
+     npm install -g ts-node
+     ```
+     Or if you prefer to install it locally:
+     ```sh
+     npm install ts-node --save-dev
+     ```
+   - Verify the installation:
+     After installing ts-node, you can verify its installation by running:
+     ```sh
+     ts-node --version
+     ```
+
+2. **Install the 'cors' module**:
+   ```sh
+   npm install cors
+
+Ensure that the types for 'cors' are available:
+Sometimes TypeScript requires type declarations for modules. In this case, 'cors' might not have its own types, but you can install the types from DefinitelyTyped:
+```sh
+npm install @types/cors --save-dev
+ ```
+
+3.**Begin running the server**:
+```sh
+nodemon index.ts
+ ```
+
+
+
+## Client Setup
+
+To run the client, navigate to the “frontend” directory and follow these steps:
+
+1. **Install TypeScript as a development dependency**:
+   ```sh
+   npm install typescript --save-dev
+```
+
+2. **Begin running the client**:
+     ```sh
+     nodemon index.ts
+     ```
+ - Access the web application:
+     Navigate to localhost:3000 in your web browser.
