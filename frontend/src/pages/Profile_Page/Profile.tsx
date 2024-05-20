@@ -370,6 +370,16 @@ function Profile(){
           </Box>
         )}
       </Grid>
+      <Grid  item xs={12} md={11}sx={{ height: '100%', bgcolor: 'background.default' }}>
+          <Box sx={{
+            bgcolor: 'background.default', ml:5, mr:5, p: 3, textAlign:'center'}}>
+            <Typography color="text.primary" variant='h4' sx={{alignItems: 'center'}}>About Subscribing to tickers</Typography>
+            {/* <Typography  color="text.secondary"  variant="h6" sx={{ mb: 2 }}>User Info</Typography> */}
+            <Typography   color="text.secondary"sx={{  mb: 1 }}>If you would like to subscribe to a ticker follow these steps:</Typography>
+            <Typography   color="text.secondary"sx={{  mb: 1 }}>Press on the MISK logo or the subscribe tab to go to the landing page. Type in your desired ticker in the begin your journey area and press the search button. You will be redirected to another page, where you can subscribe by pressing the subscribe button</Typography>
+            <Divider    color="text.secondary"sx={{ backgroundColor: '#fff', my: 2 }} />
+          </Box>
+      </Grid>
       <Grid item xs={12} md={11} sx={{ height: '100%', bgcolor: 'background.default'}}>
         <Box  component="form" onSubmit={handleSubmitChanges}
           sx={{
