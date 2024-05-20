@@ -1,5 +1,5 @@
 // @ts-check
-
+//this connects to our heroku database and is used by index.ts
 import { Pool } from 'pg';
 
 require('dotenv').config();

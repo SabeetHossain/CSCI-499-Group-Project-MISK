@@ -41,7 +41,7 @@ if (!fs.existsSync(envFile)) {
 // Load the environment variables from the .env file
 //dotenv.config();
 //console.log("JWT Secret Key:", secretKey);
-
+//uses secret key from env.
 const jwtSecret = process.env.JWT_SECRET;
 
 //LOGIN ROUTE
@@ -86,6 +86,8 @@ declare global {
     }
   }
 }
+
+//the following 2 functions are used for authentication
 const verifyJWT = (req: express.Request, res: express.Response, next: express.NextFunction)=> {
   const token = req.body['token'];
   console.log(token)
@@ -104,27 +106,19 @@ const verifyJWT = (req: express.Request, res: express.Response, next: express.Ne
   }
 };
 
-
 app.post('/isUserAuth', verifyJWT, (req,res) =>{
 
   res.status(200).json({authenticated: true, message: "this user is successfully authenticated."});
   console.log("this user is successfully authenticated.")
 });
 
-// Logout route
+// Logout route, i guess most of the logout related things are handled on the frontend
 app.post("/logout", (req, res) => {
-  //stub route for now
   res.json({ message: "Logout successful" });
 });
 
-//-----------------------------------------------------ROUTES FOR USERNAMES/EMAILS/PASSWORDS------------------------------------------------------------//
-
-//-----------------------------------------------------ROUTES FOR USER INFORMATION-----------------------------------------------------//
-
-//-----------------------------------------------------ROUTES FOR USERNAMES------------------------------------------------------------//
 
 //Create a new user (with username and password)
-
 app.post('/users', async (req: express.Request, res: express.Response) => {
 	try {
 		const { username, password, email } = req.body;
@@ -143,22 +137,22 @@ app.post('/users', async (req: express.Request, res: express.Response) => {
 	}
 });
 
-//get all usernames
-app.get('/users', async (req: express.Request, res: express.Response) => {
-	try {
-		const allUsernames = await pool.query('SELECT * FROM users');
-		// Check if any usernames were found
-		if (allUsernames.rows.length > 0) {
-			res.json(allUsernames.rows);
-		} else {
-			res.status(404).json({ message: 'No usernames found' });
-		}
-	} catch (err) {
-		console.error((err as Error).message);
-	}
-});
+//get all usernames(used for testing, not used in final build)
+// app.get('/users', async (req: express.Request, res: express.Response) => {
+// 	try {
+// 		const allUsernames = await pool.query('SELECT * FROM users');
+// 		// Check if any usernames were found
+// 		if (allUsernames.rows.length > 0) {
+// 			res.json(allUsernames.rows);
+// 		} else {
+// 			res.status(404).json({ message: 'No usernames found' });
+// 		}
+// 	} catch (err) {
+// 		console.error((err as Error).message);
+// 	}
+// });
 
-//get a username
+//gets a users info
 app.get(
 	'/users/:aUser',
 	async (req: express.Request, res: express.Response) => {
@@ -176,7 +170,7 @@ app.get(
 	},
 );
 
-//update a username
+//update a username (unused/merged into profile updating)
 // app.put(
 // 	'/users/:aUser',
 // 	async (req: express.Request, res: express.Response) => {
@@ -195,34 +189,34 @@ app.get(
 // 	},
 // );
 
-//update an email
+//update an email(merged into profile updating)
 //postman: http://localhost:4000/users/45/email
-app.put(
-	'/users/:userId/email',
-	async (req: express.Request, res: express.Response) => {
-		try {
-			const { userId } = req.params;
-			const { email } = req.body;
+// app.put(
+// 	'/users/:userId/email',
+// 	async (req: express.Request, res: express.Response) => {
+// 		try {
+// 			const { userId } = req.params;
+// 			const { email } = req.body;
 
-			const updateUserEmail = await pool.query(
-				'UPDATE users SET email = $1 WHERE user_id = $2',
-				[email, userId],
-			);
+// 			const updateUserEmail = await pool.query(
+// 				'UPDATE users SET email = $1 WHERE user_id = $2',
+// 				[email, userId],
+// 			);
 
-			res.json('Email was updated!');
-		} catch (err) {
-			console.error((err as Error).message);
-		}
-	},
-);
+// 			res.json('Email was updated!');
+// 		} catch (err) {
+// 			console.error((err as Error).message);
+// 		}
+// 	},
+// );
 
-//delete a username
+//delete a user
 app.delete(
 	'/users/:aUser',
 	async (req: express.Request, res: express.Response) => {
 		try {
 			const { aUser } = req.params;
-			const deleteUsername = await pool.query(
+			const deleteUser = await pool.query(
 				'DELETE FROM users WHERE user_id = $1',
 				[aUser],
 			);
@@ -437,6 +431,7 @@ app.put('/users/:userId', async (req: express.Request, res: express.Response) =>
 		{
 			if(numUpdates == 0)
 			{
+				//case that no user errors occured, they just tried submitting while all fields are left blank
 				statusMessage = 'profile is not updated because all fields were blank'
 				statusValue = 'warning';
 				return res.status(400).json({message: statusMessage, value: statusValue});
@@ -506,6 +501,7 @@ app.put('/users/:userId', async (req: express.Request, res: express.Response) =>
 // 	},
 // );
 
+//updates a users phone notification settings. 
 app.put('/users/phone/:userId', async (req: express.Request, res:express.Response) => {
 	try{
 		let statusValue:string = 'placeholder';
@@ -514,10 +510,12 @@ app.put('/users/phone/:userId', async (req: express.Request, res:express.Respons
 		console.log('this is req.body: '+ req.body);
 
 		const { userId } = req.params;
+		//gets the user sets in a variable
 		const user = await pool.query(
 			'SELECT * FROM users WHERE user_id = $1',
 			[userId],
 		);
+		//gets users phoneSubbed value
 		const phoneSubbed = await pool.query(
 			'SELECT phonesubbed FROM users WHERE user_id = $1',
 			[userId],
@@ -525,7 +523,7 @@ app.put('/users/phone/:userId', async (req: express.Request, res:express.Respons
 		console.log('phonesubbed: '+phoneSubbed.rows[0].phonesubbed)
 		let phoneSubscribedBody:boolean = req.body.phoneSubscribed;
 		console.log('phone notifications are enabled: ' + phoneSubscribedBody);
-
+       //its like a toggle if it was originally true in database set to false, and vice versa
 		if(phoneSubscribedBody === true)
         {
 			phoneSubscribedBody = false;
@@ -549,7 +547,7 @@ app.put('/users/phone/:userId', async (req: express.Request, res:express.Respons
 	}
 	}
 );
-
+//same logic as phone number, for email notifs
 app.put('/users/email/:userId', async (req: express.Request, res:express.Response) => {
 	try{
 		let statusValue:string = 'placeholder';
@@ -594,41 +592,41 @@ app.put('/users/email/:userId', async (req: express.Request, res:express.Respons
 	}
 );
 
-// get settings
-app.get('/settings', async (req: express.Request, res: express.Response) => {
-	try {
-		const result = await pool.query('SELECT * FROM settings LIMIT 1');
-		res.json(result.rows[0]);
-	} catch (err) {
-		res.status(500);
+// get settings (not being used anymore)
+// app.get('/settings', async (req: express.Request, res: express.Response) => {
+// 	try {
+// 		const result = await pool.query('SELECT * FROM settings LIMIT 1');
+// 		res.json(result.rows[0]);
+// 	} catch (err) {
+// 		res.status(500);
 
-		if (err instanceof Error) {
-			console.error(err.message);
-			res.json({ error: err.message });
-		}
-	}
-});
+// 		if (err instanceof Error) {
+// 			console.error(err.message);
+// 			res.json({ error: err.message });
+// 		}
+// 	}
+// });
 
 
-// set settings
-app.post('/settings', async (req: express.Request, res: express.Response) => {
-	try {
-		const result = await pool.query(
-			`INSERT INTO settings (id, message_type) VALUES ('1', $1) ON CONFLICT (id) DO UPDATE SET message_type = EXCLUDED.message_type`,
-			[req.body.message_type],
-		);
-		res.json(result);
-	} catch (err) {
-		res.status(500);
+// set settings(not being used anymore)
+// app.post('/settings', async (req: express.Request, res: express.Response) => {
+// 	try {
+// 		const result = await pool.query(
+// 			`INSERT INTO settings (id, message_type) VALUES ('1', $1) ON CONFLICT (id) DO UPDATE SET message_type = EXCLUDED.message_type`,
+// 			[req.body.message_type],
+// 		);
+// 		res.json(result);
+// 	} catch (err) {
+// 		res.status(500);
 
-		if (err instanceof Error) {
-			console.error(err.message);
-			res.json({ error: err.message });
-		}
-	}
-});
+// 		if (err instanceof Error) {
+// 			console.error(err.message);
+// 			res.json({ error: err.message });
+// 		}
+// 	}
+// });
 
-//update tickers
+//update tickers, the route used when you are subscribing to tickers
 //postman: http://localhost:4000/users/45/tickers
 
 app.put(
@@ -675,6 +673,7 @@ or
 nodemon index.ts
 */
 
+//uses port from env. if it doesnt exist or theres some error use 4000.
 const port = process.env.PORT || 4000;
 
 app.listen(port, () => {

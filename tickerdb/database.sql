@@ -1,5 +1,5 @@
 CREATE DATABASE tickers;
-
+--note that all files in this tickerdb folder are not being used in the final build--
 -- Creating a table with 3 columns: id, ticker, and company
 CREATE TABLE stocks (
     id SERIAL PRIMARY KEY,
