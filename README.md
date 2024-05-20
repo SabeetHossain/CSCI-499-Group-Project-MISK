@@ -90,14 +90,16 @@ To run the client, navigate to the “frontend” directory and follow these ste
    ```
 
 2. **Begin running the client**:
-     ```sh
-     nodemon index.ts
-     ```
+  ```sh
+  nodemon index.ts
+  ```
  - Access the web application:
      Navigate to localhost:3000 in your web browser.
    
 ## Testing of certain functions in alpaca_client.py
 
 Testing functions in alpaca_client can be done by visiting the websocket_clients directory, then running the tests.py file after installing pytest. Additionally, you can run 
-```pytest tests.py```
+```sh
+pytest tests.py
+```
 to run tests on the main functions.
