@@ -29,18 +29,18 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 import time
 
-openAi = "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"
-gmailPass = "xeur affl zdkr yjwg"
-username = 'u94q2hmdkutfig'
-dbPass = "p93efda47086cc7c59d40f6f5e8d471f74d8095429e6e641c008fecfc8b26b046"
-db = 'd7uuks355v9e6q'
-hostname = 'ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com'
-polygon = "mplYkwRaoALynpt1vkySurApehLj8YoD"
-vantageAPI = "BXOOKFPEOHCCGAHR"
-token = "e366dfb2d40d714341d8f23d3845f45a6cafece8"
-twilio_account_sid = "AC3e016f5aaba4c2c11358176763d4fe74"
-twilio_auth_token = "0270a989ae083d3e2a5afc263eb82bf6" #Trial phone: +18447801837
-twilio_sender_phone = "+18778392174"
+openAi = ""
+gmailPass = ""
+username = ''
+dbPass = ""
+db = ''
+hostname = ''
+polygon = ""
+vantageAPI = ""
+token = ""
+twilio_account_sid = ""
+twilio_auth_token = ""
+twilio_sender_phone = "+
 
 # Asynchronously inserting data into the 'news_summaries' table in the database
 async def insertDB(data):
