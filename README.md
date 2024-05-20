@@ -98,4 +98,6 @@ To run the client, navigate to the “frontend” directory and follow these ste
    
 ## Testing of certain functions in alpaca_client.py
 
-Testing functions in alpaca_client can be done by visiting the websocket_clients directory, then running the tests.py file after installing pytest. Additionally, you can run **pytest tests.py** to run tests on the main functions.
+Testing functions in alpaca_client can be done by visiting the websocket_clients directory, then running the tests.py file after installing pytest. Additionally, you can run 
+```pytest tests.py```
+to run tests on the main functions.
