@@ -1,8 +1,6 @@
-File Names	BUGS/KNOWN ISSUES we haevnt gotten aroudn to fixing
 alpaca_client.py:	We weren't able to achieve SMS messagind due to toll-free numbers needing verification (creating in account in twilio, same with another service)
-alpaca_client.py: / app.py	Emmisions to the front end (emit_message) acts very strangely and only works in some cases. Likely due to threading issues like some blocking threads since it is async but it works to at least send summarized news data to a route in a dict
+alpaca_client.py/app.py:	Emmisions to the front end (emit_message) acts very strangely and only works in some cases. Likely due to threading issues like some blocking threads since it is async but it works to at least send summarized news data to a route in a dict
 alpaca_client.py:	AWS s3 bucket function does not work, could not get it so that the images generated were sent to s3 but that doesn't matter much since messanging did not work
-
 components/element.tsx:	Ticker page just shows sample stock data, not a graph from the actual stock.
 frontend/src/pages/Login_page/login.tsx:	Users cannot press the Go back one page button in the browser's search bar, implemented a button that redirects to the homepage instead
 frontend/src/pages/Profile_Page/profile.tsx:	Had this weird bug where the userinfo at top would be infinitely loading after doing some action but I couldnt replicate it and it seems to be working now as intended.
