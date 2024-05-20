@@ -7,3 +7,4 @@ frontend/src/pages/Profile_Page/profile.tsx:	Had this weird bug where the userin
 frontend/src/pages/Profile_Page/profile.tsx:	styling issues, theres just a lot of spacing that couldve been easily fixed, just ran out of time
 sitewide:	doesnt have a state that keeps track of light or dark mode. wouldve been nice so we didnt have to keep clicking the button to change it to our preferences
 frontend/src/pages/Profile_Page/profile.tsx:	if you have a saved login, in dark mode, the fields in the update credentials section look a little weird.
+frontend/src/pages/Profile_Page/profile.tsx:	when updating email if you add a space some where like for example "sabeethossain11@gmail.com " the email gets updated in that form and you will need to type that extra space when loggin in. This might be occuring with password and username too if you add an extra space somewhere intentionally or by accident
