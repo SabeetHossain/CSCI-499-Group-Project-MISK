@@ -42,9 +42,10 @@ const items = [
 ];
 
 export default function Features() {
-  const [selectedItemIndex, setSelectedItemIndex] = React.useState(0);
+  //closest thing to int in typescript is number
+  const [selectedItemIndex, setSelectedItemIndex] = React.useState<number>(0);
 
-  const handleItemClick = (index: number) => {
+  const handleItemClick = (index: number):void => {
     setSelectedItemIndex(index);
   };
 

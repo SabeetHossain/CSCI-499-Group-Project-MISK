@@ -63,7 +63,7 @@ export const useAuth = () => {
 		}
 	};
 
-	const setAuthentication = (status: boolean, authToken: string | null) => {
+	const setAuthentication = (status: boolean, authToken: string | null):void => {
 		console.log('Setting authentication status:', status, authToken);
 		console.log(
 			'Authentication status before:',

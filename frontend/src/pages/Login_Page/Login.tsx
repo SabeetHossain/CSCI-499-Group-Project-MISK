@@ -1,7 +1,6 @@
 /*This page imports templates from material UI's sign in template:
 https://github.com/mui/material-ui/tree/v5.15.14/docs/data/material/getting-started/templates/sign-in
 */
-
 import * as React from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
@@ -105,7 +104,7 @@ export default function SignInSide() {
 
 
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>):Promise<void> => {
     event.preventDefault();
     console.log("handleSubmit is running")
 
@@ -135,6 +134,7 @@ export default function SignInSide() {
       console.log("uhhhhhhhhhhh error")
     }
   };
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Grid container component="main" sx={{ height: '100vh' }}>

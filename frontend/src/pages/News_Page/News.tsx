@@ -1,3 +1,4 @@
+//unused page, nothing new here. no feature implemented.
 import * as React from 'react';
 import { useAuth } from "../../useAuth";
 import { useState, useEffect } from 'react';

@@ -32,7 +32,7 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
   const navigate = useNavigate(); // Get the navigate function from useNavigate hook
   const { isLoggedIn } = useAuth(); // Get the isLoggedIn state from useAuth hook
 
-  const handleLogout = () => {
+  const handleLogout = ():void => {
     
     localStorage.removeItem("token");
     window.location.reload();
@@ -61,11 +61,11 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
     //navigate('/');
   };
 
-  const toggleDrawer = (newOpen: boolean) => () => {
+  const toggleDrawer = (newOpen: boolean) => ():void => {
     setOpen(newOpen);
   };
-
-  const scrollToSection = (sectionId: string) => {
+//scrolls to the section of whatever tab was clicked on in the appbar
+  const scrollToSection = (sectionId: string):void => {
     const sectionElement = document.getElementById(sectionId);
     const offset = 128;
     if (sectionElement) {
@@ -78,8 +78,6 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
       setOpen(false);
     }
   };
-
-
 
   return (
     <div>

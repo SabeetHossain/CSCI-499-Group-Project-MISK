@@ -296,10 +296,38 @@ app.put('/users/:userId', async (req: express.Request, res: express.Response) =>
 				return res.status(400).json({message: statusMessage, value: statusValue});	
 			}
 		}
+		if(currentPassword != "")
+		{
+			
+				const hashedPassword = user.rows[0].password;
+				console.log('hashed'+hashedPassword);
+				const isPasswordValid = await bcrypt.compare(currentPassword, hashedPassword);
+				console.log('ispasswordvalid '+isPasswordValid)
+				//checks if current password submitted matches the one in database
+				if (!isPasswordValid) {
+					console.log("current password does not match password in database");
+					errorOccurred = true;
+					statusMessage = 'current password is incorrect!';
+					statusValue = 'error';
+					return res.status(400).json({message: statusMessage, value: statusValue});	
+				}
+			
+			if(newPassword=="")
+			{
+				console.log("new password cant be left blank");
+				errorOccurred = true;
+				statusMessage = 'new password cannot be left blank if you are changing your password';
+				statusValue = 'error';
+				return res.status(400).json({message: statusMessage, value: statusValue});	
+
+			}
+		}
 		if(newPassword != "")
 		{
 			const hashedPassword = user.rows[0].password;
+			console.log('hashed'+hashedPassword);
 			const isPasswordValid = await bcrypt.compare(currentPassword, hashedPassword);
+			console.log('ispasswordvalid '+isPasswordValid)
 			//checks if current password submitted matches the one in database
 			if (!isPasswordValid) {
 				console.log("current password does not match password in database");

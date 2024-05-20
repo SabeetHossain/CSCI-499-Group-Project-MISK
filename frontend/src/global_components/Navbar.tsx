@@ -27,11 +27,11 @@ interface AppAppBarProps {
 
 //copy and paste of appappbar from the home components with some slight modification
 function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState<boolean>(false);
   const navigate = useNavigate(); // Get the navigate function from useNavigate hook
   const { isLoggedIn } = useAuth(); // Get the isLoggedIn state from useAuth hook
 
-  const handleLogout = () => {
+  const handleLogout = ():void => {
     localStorage.removeItem("token");
     window.location.reload();
     // Call the logout route on the client side
@@ -58,11 +58,11 @@ function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
     //navigate('/');
   };
 
-  const toggleDrawer = (newOpen: boolean) => () => {
+  const toggleDrawer = (newOpen: boolean) => ():void => {
     setOpen(newOpen);
   };
 
-  const scrollToSection = (sectionId: string) => {
+  const scrollToSection = (sectionId: string):void => {
     const sectionElement = document.getElementById(sectionId);
     const offset = 128;
     if (sectionElement) {

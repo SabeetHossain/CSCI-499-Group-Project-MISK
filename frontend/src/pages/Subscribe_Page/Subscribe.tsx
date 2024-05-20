@@ -15,7 +15,7 @@ function Subscribe() {
 	const { subscribe } = useSubscribeUserTicker();
 
 	useEffect(() => {
-		const loggedInCheck = async () => {
+		const loggedInCheck = async ():Promise<void> => {
 			console.log('INSIDE OF SUBCRIBE: grabbing token');
 			const storedToken = localStorage.getItem('token');
 			if (storedToken) {
@@ -36,7 +36,7 @@ function Subscribe() {
 		loggedInCheck();
 	});
 
-	const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>) => {
+	const onSubmitForm = async (e: React.FormEvent<HTMLFormElement>):Promise<void> => {
 		e.preventDefault();
 
 		await subscribe({ ticker, userId: description });

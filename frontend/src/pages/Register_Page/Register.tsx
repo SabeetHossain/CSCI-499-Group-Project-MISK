@@ -26,7 +26,7 @@ function SignUp() {
   const [password, setPassword] = React.useState("");
   const [email, setEmail] = React.useState("");
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(event: React.FormEvent<HTMLFormElement>):Promise<void> => {
     event.preventDefault();
     try {
       const body = { username, password, email };

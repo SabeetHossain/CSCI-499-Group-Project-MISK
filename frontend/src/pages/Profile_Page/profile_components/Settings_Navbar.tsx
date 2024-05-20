@@ -1,3 +1,4 @@
+//unused. was trying to do something with this but it looked really bad. its also incomplete i think because i dont think any of the tabs scroll to the desired section like how the navbar on the landing page does it.
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';

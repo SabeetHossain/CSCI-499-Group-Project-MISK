@@ -6,7 +6,7 @@ export const useRequireAuth = () => {
   const { isLoggedIn, token } = useAuth();
   const navigate = useNavigate();
 
-  const requireAuth = () => {
+  const requireAuth = ():void => {
     if (!isLoggedIn) {
       // Redirect to the login page if the user is not logged in
       navigate('/login');

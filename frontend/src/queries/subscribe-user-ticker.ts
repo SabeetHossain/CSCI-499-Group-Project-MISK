@@ -2,7 +2,7 @@ type Args = { ticker: string; userId: string };
 
 function useSubscribeUserTicker() {
 	return {
-		async subscribe({ ticker, userId }: Args) {
+		async subscribe({ ticker, userId }: Args):Promise<void> {
 			try {
 				const response = await fetch(
 					`http://localhost:4000/users/${userId}/ticker`,
