@@ -107,3 +107,12 @@ Testing functions in alpaca_client can be done by visiting the websocket_clients
 pytest tests.py
 ```
 to run tests on the main functions.
+
+
+## Testing of functions that make calls to the backend (except subscribe).
+```sh
+   cd CSCI-499-Group-Project-Misk
+   cd server
+   npx ts-node testBackend.ts
+```
+certain functions and tests can be commented out to do some isolated testing however first an account has to be registered using the register test.
