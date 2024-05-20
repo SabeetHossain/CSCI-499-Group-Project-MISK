@@ -476,34 +476,35 @@ app.put('/users/:userId', async (req: express.Request, res: express.Response) =>
 //   }
 // })
 
-app.put(
-	'/users/ticker/:description',
-	async (req: express.Request, res: express.Response) => {
-		try {
-			const { description } = req.params;
-			const newTicker = req.body.tickers;
+//I dont think this is being used
+// app.put(
+// 	'/users/ticker/:description',
+// 	async (req: express.Request, res: express.Response) => {
+// 		try {
+// 			const { description } = req.params;
+// 			const newTicker = req.body.tickers;
 
-			const user = await pool.query(
-				'SELECT tickers FROM users WHERE description = $1',
-				[description],
-			);
-			const currentTickers = user.rows[0].tickers;
+// 			const user = await pool.query(
+// 				'SELECT tickers FROM users WHERE description = $1',
+// 				[description],
+// 			);
+// 			const currentTickers = user.rows[0].tickers;
 
-			const updatedTickers = currentTickers
-				? `${currentTickers}, ${newTicker}`
-				: newTicker;
+// 			const updatedTickers = currentTickers
+// 				? `${currentTickers}, ${newTicker}`
+// 				: newTicker;
 
-			const updateUsername = await pool.query(
-				'UPDATE users SET tickers = $1 WHERE description = $2',
-				[updatedTickers, description],
-			);
+// 			const updateUsername = await pool.query(
+// 				'UPDATE users SET tickers = $1 WHERE description = $2',
+// 				[updatedTickers, description],
+// 			);
 
-			res.json('Ticker was updated!');
-		} catch (err) {
-			console.error((err as Error).message);
-		}
-	},
-);
+// 			res.json('Ticker was updated!');
+// 		} catch (err) {
+// 			console.error((err as Error).message);
+// 		}
+// 	},
+// );
 
 app.put('/users/phone/:userId', async (req: express.Request, res:express.Response) => {
 	try{
