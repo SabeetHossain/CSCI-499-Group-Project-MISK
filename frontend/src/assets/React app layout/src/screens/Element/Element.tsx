@@ -6,7 +6,6 @@ export const Element = (): JSX.Element => {
     <div className="element">
       <div className="div">
         <header className="header">
-          <img className="icon" alt="Icon" src="/img/icon-5.png" />
           <p className="apple-inc">
             <span className="text-wrapper">Apple Inc.</span>
           </p>
