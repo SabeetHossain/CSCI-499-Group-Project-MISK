@@ -75,6 +75,7 @@ async function TestBackend() {
   let numTests = 0;
   let failedTests = 0;
 
+//functions nearly same as frontend, just slight changes to make it work for testing.
   async function handleRegister(): Promise<boolean> {
     const username: string = 'test user 1';
     const password: string = 'test password';
@@ -235,11 +236,10 @@ async function updatePhoneNotifs():Promise<void>{
           console.error('Error fetching user info:', error);
         }
       }
-
+//test 1:register. if you do not want to perform this test comment out lines 240-264 and line 416.
   await handleRegister();
   numTests += 1;
   console.log('The following tests are for handleRegister. The whole thing will be counted as 1 test');
-
   console.log('expected username: ' + expectedInitialUsername);
   console.log('actual username: ' + backendusername);
   console.log('expected email: ' + expectedInitialEmail);
@@ -248,7 +248,6 @@ async function updatePhoneNotifs():Promise<void>{
   console.log('actual phonesubbed: ' + backendphonesubbed);
   console.log('expected emailsubbed: ' + expectedInitialEmailSubbed);
   console.log('actual emailsubbed: ' + backendemailsubbed);
-
   if (expectedInitialUsername === backendusername &&
     expectedInitialEmail === backendemail &&
     expectedInitialPhoneSubbed === backendphonesubbed &&
@@ -264,6 +263,7 @@ async function updatePhoneNotifs():Promise<void>{
     failedTests += 1;
   }
 
+//test 2:login. if you do not want to perform this test comment out lines 267-285 and line 417.
   await handleLogin();
   numTests+=1;
   console.log('The following tests are for handleLogin. The whole thing will be counted as 1 test');
@@ -284,7 +284,7 @@ async function updatePhoneNotifs():Promise<void>{
     failedTests += 1;
   }
 
-
+//test 3: updating credentials/profile. if you do not want to perform this or certain test you can comment them out. commenting out the whole test wil be lines 289-363. and line 418
 //the 11 tests will count as 1
   await updateProfile('','','','');
   console.log('profile test 1: all fields blank')
@@ -362,7 +362,7 @@ async function updatePhoneNotifs():Promise<void>{
   else
   {failedTests+=1;}
 
-
+//test 4: toggling subscription to phone notifications on and off. if you dont want to perform certain tests comment it out. to comment out the full test comment out lines 366-396 and line 419
   await updatePhoneNotifs();
   console.log('notif test 1: turn phone notifs on')
   console.log('expect: You will now be getting phone notifications!, info')
@@ -394,7 +394,7 @@ async function updatePhoneNotifs():Promise<void>{
     {successfulTests+=1;}
   else
   {failedTests+=1;}
-
+//test 5 delete. comment out line 398-414 to comment this test out. useful if you want to see the changes the other test provide to the database without removing the account from database .
   await handleDelete();
   console.log('testing delete');
   console.log('expect: "Username was deleted!"')
