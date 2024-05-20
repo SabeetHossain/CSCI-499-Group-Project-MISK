@@ -1,3 +1,5 @@
+/* Old Subscribe page (Currently using new search bar subscribing method) */
+
 import React, { Fragment, useState, useEffect } from 'react';
 
 import './Subscribe.css';
