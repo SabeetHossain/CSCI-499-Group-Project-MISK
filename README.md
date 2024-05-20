@@ -13,34 +13,31 @@ For the project to connect to the database and interact with external services c
 Run the following pip command in your terminal to install all required libraries:
 
 ```bash
-pip install asyncio Flask flask_socketio websockets openai asyncpg aiosmtplib
+pip install aiohttp websockets openai asyncpg aiosmtplib requests pandas matplotlib tiingo scikit-learn torch pytest pytest-asyncio numpy flask_socketio Flask asyncio
 ```
 
-### Postgres Configuration
+### Database
 
-The Postgres configuration within `alpaca_client.py` needs to be updated to reflect the DB setup. This includes the host, user, password, and database name. The exact values for these configurations will depend on how your system and Postgres server are set up.
-
-#### Example Configuration
-
-```python
-username = 'postgres'
-dbPass = "Your password here" #Must be changed to your postgres password
-db = 'newsData'
-hostname = 'localhost'
-```
+The database configuration within `alpaca_client.py` now runs on Heroku, so there is no need to set up on postgres.
 
 #### Required Variables
 
 In addition to configuring the database connection, there are several variables at the top of alpaca_client.py that must be replaced with actual values. These are critical for the functionality related to Alpaca API, OpenAI, and Gmail notifications.
 
 ```python
-openAi = "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" # OpenAI API Key
-gmailPass = "xeur affl zdkr yjwg" # Gmail application-specific password
+openAi = "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"
+gmailPass = "xeur affl zdkr yjwg"
+username = 'u94q2hmdkutfig'
+dbPass = "p93efda47086cc7c59d40f6f5e8d471f74d8095429e6e641c008fecfc8b26b046"
+db = 'd7uuks355v9e6q'
+hostname = 'ceu9lmqblp8t3q.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com'
+polygon = "mplYkwRaoALynpt1vkySurApehLj8YoD"
+vantageAPI = "BXOOKFPEOHCCGAHR"
+token = "e366dfb2d40d714341d8f23d3845f45a6cafece8"
 ```
 
 ## Notes
 
-- It is important to replace `"Your password here"`, the placeholder for `dbPass`, with your actual database password to ensure that the application can connect to the PostgreSQL database successfully, as well as the other respective variables
 - The gmail account is set to send emails from my email account, mshvorin@gmail.com, and until the ticker subscription is implimented, unless you add a row with your email to the users table, you will be unable to recieve any emails (as you are not subscribed to them), but there is output in the console for emails being sent out.
 - When connected, you should be able to see that the flask app has been ran in the console. You will see something similar to `(19168) wsgi starting up on http://127.0.0.1:5000/`, and should click on the link to connect to the webhook.
 
@@ -81,7 +78,6 @@ npm install @types/cors --save-dev
 ```sh
 nodemon index.ts
  ```
-
 
 
 ## Client Setup
