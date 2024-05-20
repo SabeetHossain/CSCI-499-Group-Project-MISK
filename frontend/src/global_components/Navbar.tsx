@@ -150,11 +150,35 @@ function Navbar({ mode, toggleColorMode }: AppAppBarProps) {
                   </Typography>
                 </MenuItem>
                 <MenuItem
-                  onClick={() => linkTo('')}
+                  onClick={() => linkTo('subscribe')}
                   sx={{ py: '6px', px: '12px' }}
                 >
                   <Typography variant="body2" color="text.primary">
                     Subscribe
+                  </Typography>
+                </MenuItem>
+                <MenuItem
+                  onClick={() => linkTo('news')}
+                  sx={{ py: '6px', px: '12px' }}
+                >
+                  <Typography variant="body2" color="text.primary">
+                    News
+                  </Typography>
+                </MenuItem>
+                <MenuItem
+                  onClick={() => linkTo('admin_settings')}
+                  sx={{ py: '6px', px: '12px' }}
+                >
+                  <Typography variant="body2" color="text.primary">
+                    Admin Settings
+                  </Typography>
+                </MenuItem>
+                <MenuItem
+                  onClick={() => linkTo('ticker')}
+                  sx={{ py: '6px', px: '12px' }}
+                >
+                  <Typography variant="body2" color="text.primary">
+                    Ticker
                   </Typography>
                 </MenuItem>
               </Box>
