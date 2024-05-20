@@ -563,7 +563,7 @@ async def tiingoML(ticker, sentimentScore):
 # Test ticker runs
 # asyncio.run(tiingoML("AAPL"))
 # asyncio.run(tiingoML("MSFT"))
-asyncio.run(tiingoML("TSLA",5))
+# asyncio.run(tiingoML("TSLA",5))
 
 # Test function to run if there is no news based on the first historical data pulled since it has TSLA in it
 async def Historical():
