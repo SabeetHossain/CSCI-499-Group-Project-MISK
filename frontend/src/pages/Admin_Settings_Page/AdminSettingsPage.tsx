@@ -1,3 +1,5 @@
+//this page is unused the settings from this have basically merged into the profile page
+//new routes have also been made besides the ones used for this page
 import {
 	Box,
 	Card,
